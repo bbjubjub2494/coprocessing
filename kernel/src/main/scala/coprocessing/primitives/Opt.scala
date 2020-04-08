@@ -38,10 +38,16 @@ object Opt {
   // https://hseeberger.wordpress.com/2013/10/04/name-based-extractors-in-scala-2-11/
   def unapply[A](n: Opt[A]): Opt[A] = n
 
-  implicit def Eq[A](implicit ev: Eq[A]): Eq[Opt[A]] = new Eq[Opt[A]] {
-    def eqv(x: Opt[A], y: Opt[A]): Boolean =
-      if (x.isEmpty) y.isEmpty else ev.eqv(x.ref, y.ref)
+  given [A](using Eq[A]) as Eq[Opt[A]] = Eq.instance {
+    (x, y) =>
+      x.ref == null && y.ref == null ||
+      x.ref != null && y.ref != null && Eq[A].eqv(x.ref, y.ref)
   }
+
+  /** Scala 3 opt-in strict equality.
+   https://dotty.epfl.ch/docs/reference/contextual/multiversal-equality.html
+  */
+  given [A, B](using A Eql B) as (Opt[A] Eql Opt[B]) = Eql.derived
 }
 
 class Opt[+A](val ref: A | Null) extends AnyVal {
