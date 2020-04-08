@@ -13,8 +13,6 @@ object Matrix3D {
            (n30: Scalar, n31: Scalar, n32: Scalar, n33: Scalar): Matrix3D =
     Matrix(n00, n01, n02, n03)(n10, n11, n12, n13)(n20, n21, n22, n23)(n30, n31, n32, n33)
   val Identity = IdentityMatrix
-
-  def (self: Matrix3D) toArray: IArray[Scalar] = unwrapM(self)
 }
 
 given Show[Matrix3D] {
@@ -26,8 +24,9 @@ given Show[Matrix3D] {
     String.format(Format, m.foldRight(List.empty[AnyRef])(_::_): _*).nn
 }
 
-def (m: Matrix3D) apply(v: Vector3D): Vector3D = mulMV(m, v)
-
-def (m1: Matrix3D) compose(m2: Matrix3D): Matrix3D = mulMM(m1, m2)
-
-def (m1: Matrix3D) andThen(m2: Matrix3D): Matrix3D = m2 compose m1
+extension on (self: Matrix3D) {
+  def toArray: IArray[Scalar] = unwrapM(self)
+  def apply(v: Vector3D): Vector3D = mulMV(self, v)
+  def compose(other: Matrix3D): Matrix3D = mulMM(self, other)
+  def andThen(other: Matrix3D): Matrix3D = other compose self
+}
