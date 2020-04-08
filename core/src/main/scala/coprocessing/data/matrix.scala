@@ -15,18 +15,41 @@ object Matrix3D {
   val Identity = IdentityMatrix
 }
 
+extension Matrix3DOps on (self: Matrix3D) {
+  def toArray: IArray[Scalar] = unwrapM(self)
+
+  def apply(v: Vector3D): Vector3D = mulMV(self, v)
+  def compose(other: Matrix3D): Matrix3D = mulMM(self, other)
+  def andThen(other: Matrix3D): Matrix3D = other compose self
+
+  def  _1 = toArray( 0)
+  def  _2 = toArray( 1)
+  def  _3 = toArray( 2)
+  def  _4 = toArray( 3)
+  def  _5 = toArray( 4)
+  def  _6 = toArray( 5)
+  def  _7 = toArray( 6)
+  def  _8 = toArray( 7)
+  def  _9 = toArray( 8)
+  def _10 = toArray( 9)
+  def _11 = toArray(10)
+  def _12 = toArray(11)
+  def _13 = toArray(12)
+  def _14 = toArray(13)
+  def _15 = toArray(14)
+  def _16 = toArray(15)
+}
+
 given Show[Matrix3D] {
   private val Format = """Matrix3D(%+.5f, %+.5f, %+.5f, %+.5f)
                          |        (%+.5f, %+.5f, %+.5f, %+.5f)
                          |        (%+.5f, %+.5f, %+.5f, %+.5f)
                          |        (%+.5f, %+.5f, %+.5f, %+.5f)""".stripMargin
-  def show(m: Matrix3D) =
-    String.format(Format, m.foldRight(List.empty[AnyRef])(_::_): _*).nn
-}
-
-extension on (self: Matrix3D) {
-  def toArray: IArray[Scalar] = unwrapM(self)
-  def apply(v: Vector3D): Vector3D = mulMV(self, v)
-  def compose(other: Matrix3D): Matrix3D = mulMM(self, other)
-  def andThen(other: Matrix3D): Matrix3D = other compose self
+  def show(self: Matrix3D) =
+    String.format(Format,
+      self._1, self._2, self._3, self._4,
+      self._5, self._6, self._7, self._8,
+      self._9, self._10, self._11, self._12,
+      self._13, self._14, self._15, self._16,
+    ).nn
 }
