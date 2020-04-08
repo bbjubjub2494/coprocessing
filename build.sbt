@@ -15,6 +15,9 @@ lazy val sharedSettings = Seq(
 
 lazy val kernel = project
   .settings(sharedSettings)
+  .settings(
+    libraryDependencies += ("org.typelevel" %% "cats-kernel" % catsVersion).withDottyCompat(scalaVersion.value),
+  )
 
 lazy val core = project
   .settings(sharedSettings)
