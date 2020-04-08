@@ -30,7 +30,7 @@ import cats.kernel.Eq
 object Opt {
   def apply[A](a: A): Opt[A] = new Opt(a)
 
-  def empty[A]: Opt[A] = new Opt[A](null.asInstanceOf[A])
+  def empty[A]: Opt[A] = new Opt[A](null)
 
   // this is a name-based extractor. instead of returning Option[_] it
   // is free to return any type with .isEmpty and .get, i.e. Opt[_].
@@ -38,14 +38,14 @@ object Opt {
   // https://hseeberger.wordpress.com/2013/10/04/name-based-extractors-in-scala-2-11/
   def unapply[A](n: Opt[A]): Opt[A] = n
 
-  given [A](using Eq[A]) as Eq[Opt[A]] = Eq.instance {
+  given [A](using ev: Eq[A]) as Eq[Opt[A]] = Eq.instance {
     (x, y) =>
-      x.ref == null && y.ref == null ||
-      x.ref != null && y.ref != null && Eq[A].eqv(x.ref, y.ref)
+      (x.ref.asInstanceOf[AnyRef] eq y.ref.asInstanceOf[AnyRef]) ||
+      x.ref != null && y.ref != null && ev.eqv(x.ref, y.ref)
   }
 
   /** Scala 3 opt-in strict equality.
-   https://dotty.epfl.ch/docs/reference/contextual/multiversal-equality.html
+   * https://dotty.epfl.ch/docs/reference/contextual/multiversal-equality.html
   */
   given [A, B](using A Eql B) as (Opt[A] Eql Opt[B]) = Eql.derived
 }
