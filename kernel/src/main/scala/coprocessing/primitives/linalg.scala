@@ -20,11 +20,11 @@ opaque type MVectorArray = Array[Scalar] /// mutable Column-major 4xN
 
 // Obtain a immutable-typed reference to a mutable array.
 // To be used cautiously and with ownership in mind.
-private def (self: Array[Scalar]) freeze: IArray[Scalar] =
+private def (self: Array[Scalar]).freeze: IArray[Scalar] =
   self.asInstanceOf[IArray[Scalar]]
 // Obtain a mutable-typed reference to an immutable array.
 // To be used VERY cautiously!
-private def (self: IArray[Scalar]) unfreeze: Array[Scalar] =
+private def (self: IArray[Scalar]).unfreeze: Array[Scalar] =
   self.asInstanceOf[Array[Scalar]]
 
 
@@ -48,7 +48,7 @@ given unwrapV as Conversion[Vector, IArray[Scalar]] = identity
 final val IdentityMatrix: Matrix =
   Matrix(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)
 
-def (batch: MVectorArray) batchTransformInplace(mat: Matrix): Unit =
+def (batch: MVectorArray).batchTransformInplace(mat: Matrix): Unit =
   for i <- 0 until batch.length by 4 do
     val x = dot4(mat,  0)(batch.freeze, i)
     val y = dot4(mat,  4)(batch.freeze, i)
@@ -59,7 +59,7 @@ def (batch: MVectorArray) batchTransformInplace(mat: Matrix): Unit =
     batch(i+2) = z
     batch(i+3) = w
 
-def (mat: MVectorArray) transposeInplace(): Unit =
+def (mat: MVectorArray).transposeInplace(): Unit =
   require(mat.length == 16)
   @inline def swap(i: Int, j: Int) =
     val tmp = mat(i)

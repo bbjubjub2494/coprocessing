@@ -14,8 +14,6 @@ object Vector3D {
   val UnitY = Vector3D(0,1,0,0)
   val UnitZ = Vector3D(0,0,1,0)
   val UnitW = Vector3D(0,0,0,1)
-
-  def (self: Vector3D) toArray: IArray[Scalar] = unwrapV(self)
 }
 
 given Show[Vector3D] {
@@ -24,5 +22,8 @@ given Show[Vector3D] {
     String.format(Format, v(0), v(1), v(2), v(3)).nn
 }
 
-@annotation.infix def (v1: Vector3D) dot (v2: Vector3D): Scalar =
-  dotVV(v1, v2)
+extension on (self: Vector3D) {
+  def toArray: IArray[Scalar] = unwrapV(self)
+
+  @annotation.infix def dot(other: Vector3D): Scalar = dotVV(self, other)
+}
