@@ -21,10 +21,19 @@ extension Vector3DOps on (self: Vector3D) {
 
   @annotation.infix def dot(other: Vector3D): Scalar = dotVV(self, other)
 
-  def _1 = toArray(0)
-  def _2 = toArray(1)
-  def _3 = toArray(2)
-  def _4 = toArray(3)
+  def _1: Scalar = toArray(0)
+  def _2: Scalar = toArray(1)
+  def _3: Scalar = toArray(2)
+  def _4: Scalar = toArray(3)
+
+  def x = _1
+  def y = _2
+  def z = _3
+  def w = _4
+
+  def apply(i: Int): Scalar =
+    require(i >= 0 && i < 4)
+    toArray(i)
 }
 
 opaque type Matrix3D = Matrix
@@ -44,22 +53,27 @@ extension Matrix3DOps on (self: Matrix3D) {
   def compose(other: Matrix3D): Matrix3D = mulMM(self, other)
   def andThen(other: Matrix3D): Matrix3D = other compose self
 
-  def  _1 = toArray( 0)
-  def  _2 = toArray( 1)
-  def  _3 = toArray( 2)
-  def  _4 = toArray( 3)
-  def  _5 = toArray( 4)
-  def  _6 = toArray( 5)
-  def  _7 = toArray( 6)
-  def  _8 = toArray( 7)
-  def  _9 = toArray( 8)
-  def _10 = toArray( 9)
-  def _11 = toArray(10)
-  def _12 = toArray(11)
-  def _13 = toArray(12)
-  def _14 = toArray(13)
-  def _15 = toArray(14)
-  def _16 = toArray(15)
+  def  _1: Scalar = toArray( 0)
+  def  _2: Scalar = toArray( 1)
+  def  _3: Scalar = toArray( 2)
+  def  _4: Scalar = toArray( 3)
+  def  _5: Scalar = toArray( 4)
+  def  _6: Scalar = toArray( 5)
+  def  _7: Scalar = toArray( 6)
+  def  _8: Scalar = toArray( 7)
+  def  _9: Scalar = toArray( 8)
+  def _10: Scalar = toArray( 9)
+  def _11: Scalar = toArray(10)
+  def _12: Scalar = toArray(11)
+  def _13: Scalar = toArray(12)
+  def _14: Scalar = toArray(13)
+  def _15: Scalar = toArray(14)
+  def _16: Scalar = toArray(15)
+
+  def apply(i: Int, j: Int): Scalar =
+    require(i >= 0 && i < 4)
+    require(j >= 0 && j < 4)
+    toArray(i*4+j)
 }
 
 given Show[Matrix3D] {
