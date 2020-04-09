@@ -1,4 +1,4 @@
-package coprocessing.data
+package coprocessing.core
 
 import coprocessing.kernel.primitives.{_, given _}
 
