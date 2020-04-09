@@ -12,7 +12,7 @@ object Matrix3D {
            (n20: Scalar, n21: Scalar, n22: Scalar, n23: Scalar)
            (n30: Scalar, n31: Scalar, n32: Scalar, n33: Scalar): Matrix3D =
     Matrix(n00, n01, n02, n03)(n10, n11, n12, n13)(n20, n21, n22, n23)(n30, n31, n32, n33)
-  val Identity = IdentityMatrix
+  val Identity: Matrix3D = IdentityMatrix
 }
 
 extension Matrix3DOps on (self: Matrix3D) {
@@ -41,10 +41,7 @@ extension Matrix3DOps on (self: Matrix3D) {
 }
 
 given Show[Matrix3D] {
-  private val Format = """Matrix3D(%+.5f, %+.5f, %+.5f, %+.5f)
-                         |        (%+.5f, %+.5f, %+.5f, %+.5f)
-                         |        (%+.5f, %+.5f, %+.5f, %+.5f)
-                         |        (%+.5f, %+.5f, %+.5f, %+.5f)""".stripMargin
+  private val Format = "Matrix3D" + "(%+.5f, %+.5f, %+.5f, %+.5f)" * 4
   def show(self: Matrix3D) =
     String.format(Format,
       self._1, self._2, self._3, self._4,
