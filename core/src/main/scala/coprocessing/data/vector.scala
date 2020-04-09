@@ -1,6 +1,6 @@
 package coprocessing.data
 
-import coprocessing.primitives.{_, given _}
+import coprocessing.kernel.primitives.{_, given _}
 
 import opaques.arrayOps._
 import cats.Show

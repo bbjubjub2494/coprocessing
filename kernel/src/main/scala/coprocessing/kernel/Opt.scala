@@ -19,13 +19,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package coprocessing.primitives
+package coprocessing.kernel
 
 import cats.kernel.Eq
 
 /** Zero-cost equivalent to scala.Option.
 *
-* borrowed from org.typelevel/spire
+* Borrowed from [Spire](https://typelevel.org/spire/)
 */
 object Opt {
   def apply[A](a: A): Opt[A] = new Opt(a)
@@ -44,9 +44,8 @@ object Opt {
       x.ref != null && y.ref != null && ev.eqv(x.ref, y.ref)
   }
 
-  /** Scala 3 opt-in strict equality.
-   * https://dotty.epfl.ch/docs/reference/contextual/multiversal-equality.html
-  */
+  // Scala 3 opt-in strict equality.
+  // https://dotty.epfl.ch/docs/reference/contextual/multiversal-equality.html
   given [A, B](using A Eql B) as (Opt[A] Eql Opt[B]) = Eql.derived
 }
 

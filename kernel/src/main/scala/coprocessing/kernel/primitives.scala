@@ -1,33 +1,40 @@
-/** Primitive operations for linear algebra.
+/** Primitive operations on 3D homogenous coordinate spaces.
 *
 * Opaque types are used to indicate matrix shape.
 * Hungarian notation is needed because of type erasure.
 */
-package coprocessing.primitives
+package coprocessing.kernel.primitives
 
-type Scalar = Float  /// Scalar value
+/** Type of scalar values */
+type Scalar = Float
 
-opaque type Matrix = IArray[Scalar] /// Row-major 4x4 matrix
-opaque type Vector = IArray[Scalar] /// 4-long column vector
-opaque type VectorArray = IArray[Scalar] /// Column-major 4xN
-opaque type MVectorArray = Array[Scalar] /// mutable Column-major 4xN
+/** Row-major 4x4 matrix */
+opaque type Matrix = IArray[Scalar]
+/** 4-long column vector */
+opaque type Vector = IArray[Scalar]
+/** Column-major 4xN */
+opaque type VectorArray = IArray[Scalar]
+/** mutable column-major 4xN */
+opaque type MVectorArray = Array[Scalar]
 
 @inline private def dot4(v1: IArray[Scalar], off1: Int)(v2: IArray[Scalar], off2: Int): Scalar =
-  v1(off1) * v2(off2) +
+  v1(off1  ) * v2(off2  ) +
   v1(off1+1) * v2(off2+1) +
   v1(off1+2) * v2(off2+2) +
   v1(off1+3) * v2(off2+3)
 
-// Obtain a immutable-typed reference to a mutable array.
-// To be used cautiously and with ownership in mind.
+/** Obtain a immutable-typed reference to a mutable array.
+ * To be used cautiously and with ownership in mind.
+ */
 private def (self: Array[Scalar]).freeze: IArray[Scalar] =
   self.asInstanceOf[IArray[Scalar]]
-// Obtain a mutable-typed reference to an immutable array.
-// To be used VERY cautiously!
+/** Obtain a mutable-typed reference to an immutable array.
+ * To be used VERY cautiously!
+ */
 private def (self: IArray[Scalar]).unfreeze: Array[Scalar] =
   self.asInstanceOf[Array[Scalar]]
 
-
+/** Build a [Matrix](Matrix) from its scalar components. */
 def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar)
           (n10: Scalar, n11: Scalar, n12: Scalar, n13: Scalar)
           (n20: Scalar, n21: Scalar, n22: Scalar, n23: Scalar)
@@ -37,14 +44,16 @@ def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar)
                  n20, n21, n22, n23,
                  n30, n31, n32, n33)
 
-def Vector(n0: Scalar, n1: Scalar, n2: Scalar, n3: Scalar): Vector =
-  IArray[Scalar](n0, n1, n2, n3)
+/** Build a [Vector](Vector) from its scalar components. */
+def Vector(x: Scalar, y: Scalar, z: Scalar, w: Scalar): Vector =
+  IArray[Scalar](x, y, z, w)
 
+/** Return the underlying array. */
 def unwrapM(m: Matrix): IArray[Scalar] = m
+/** Return the underlying array. */
 def unwrapV(v: Vector): IArray[Scalar] = v
 
-/** Shared instance of the identity matrix.
- */
+/** Shared instance of the identity matrix. */
 final val IdentityMatrix: Matrix =
   Matrix(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)
 
