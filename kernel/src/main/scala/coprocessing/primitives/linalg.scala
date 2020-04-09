@@ -40,8 +40,8 @@ def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar)
 def Vector(n0: Scalar, n1: Scalar, n2: Scalar, n3: Scalar): Vector =
   IArray[Scalar](n0, n1, n2, n3)
 
-given unwrapM as Conversion[Matrix, IArray[Scalar]] = identity
-given unwrapV as Conversion[Vector, IArray[Scalar]] = identity
+def unwrapM(m: Matrix): IArray[Scalar] = m
+def unwrapV(v: Vector): IArray[Scalar] = v
 
 /** Shared instance of the identity matrix.
  */
