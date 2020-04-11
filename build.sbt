@@ -27,3 +27,7 @@ lazy val core = project
     libraryDependencies += ("org.typelevel" %% "cats-core" % catsVersion).withDottyCompat(scalaVersion.value),
     libraryDependencies += "org.processing" % "core" % processingVersion,
   )
+
+lazy val demo = project
+  .settings(sharedSettings)
+  .dependsOn(core)
