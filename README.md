@@ -1,8 +1,11 @@
+# What's this?
+
 Coprocessing
 is an attempt to interface
 Processing, the well-known computer graphics programming environment,
 with the upcoming Scala 3 language and its ecosystem.
 
+# Why?
 
 - Ergonomy and expressivity:
 the Processing language is,
