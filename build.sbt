@@ -1,4 +1,5 @@
 val catsVersion = "2.1.1"
+val processingVersion = "3.3.7"
 
 lazy val sharedSettings = Seq(
   turbo := true,
@@ -24,4 +25,5 @@ lazy val core = project
   .dependsOn(kernel)
   .settings(
     libraryDependencies += ("org.typelevel" %% "cats-core" % catsVersion).withDottyCompat(scalaVersion.value),
+    libraryDependencies += "org.processing" % "core" % processingVersion,
   )
