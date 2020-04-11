@@ -10,7 +10,10 @@ def runSketch(s: Sketch): Unit = {
     PApplet.runSketch(Array[String|Null]("coprocessing.core"), thePApplet)
 }
 
-def thePApplet(using pa: PApplet) = pa
 given (using PApplet) as SizeOps {
     def size(width: Int, height: Int) = thePApplet.size(width, height)
+}
+
+given (using PApplet) as LegacyOps {
+    def legacy[A](f: PApplet ?=> A): A = f
 }
