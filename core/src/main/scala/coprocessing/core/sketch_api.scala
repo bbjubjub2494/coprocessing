@@ -1,22 +1,15 @@
 package coprocessing.core
 
-import processing.core.PApplet
-
 trait Sketch {
-  def settings(): (LegacyOps, SizeOps) ?=> Unit = ()
-  def setup(): (FrameRateOps, LegacyOps) ?=> Unit = ()
-  def draw(): (FrameRateOps, LegacyOps) ?=> Unit = ()
+  def settings(): (SizeOps) ?=> Unit = ()
+  def setup(): (FrameRateOps) ?=> Unit = ()
+  def draw(): (FrameRateOps) ?=> Unit = ()
 }
 
 trait SizeOps {
     def size(width: Int, height: Int): Unit
 }
 def size(width: Int, height: Int)(using SizeOps) = summon[SizeOps].size(width, height)
-
-trait LegacyOps {
-    def legacy[A](f: PApplet ?=> A): A
-}
-def legacy[A](f: PApplet ?=> A)(using LegacyOps): A = summon[LegacyOps].legacy(f)
 
 trait FrameRateOps {
     def frameRate: Float
@@ -25,4 +18,7 @@ trait FrameRateOps {
 def frameRate(using FrameRateOps) = summon[FrameRateOps].frameRate
 def frameRate(fps: Float)(using FrameRateOps) = summon[FrameRateOps].frameRate(fps)
 
-def thePApplet(using pa: PApplet) = pa
+trait LegacyOps[C] {
+    def legacy[A](f: C ?=> A): A
+}
+def legacy[C, A](f: C ?=> A)(using LegacyOps[C]): A = summon[LegacyOps[C]].legacy(f)
