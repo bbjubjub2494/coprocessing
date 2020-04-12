@@ -9,6 +9,7 @@ matrix:
 
 script:
   - sbt doc
+  - echo bbjubjub2494.github.io/coprocessing > _site/CNAME
 
 deploy:
   provider: pages
