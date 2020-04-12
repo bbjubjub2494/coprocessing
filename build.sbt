@@ -25,9 +25,15 @@ lazy val core = project
   .dependsOn(kernel)
   .settings(
     libraryDependencies += ("org.typelevel" %% "cats-core" % catsVersion).withDottyCompat(scalaVersion.value),
+  )
+
+lazy val p3backend = project
+  .settings(sharedSettings)
+  .dependsOn(core)
+  .settings(
     libraryDependencies += "org.processing" % "core" % processingVersion,
   )
 
 lazy val demo = project
   .settings(sharedSettings)
-  .dependsOn(core)
+  .dependsOn(core, p3backend)

@@ -1,8 +1,9 @@
 package hello
 
 import coprocessing.core._
+import coprocessing.p3._
 
-object Hello extends Sketch {
+class Hello(using P3LegacyOps) extends Sketch {
   override def settings() =
     size(1000, 800)
   override def setup() =
@@ -11,4 +12,4 @@ object Hello extends Sketch {
     }
 }
 
-@main def runHello = runSketch(Hello)
+@main def runHello = runSketch(new Hello)
