@@ -9,7 +9,7 @@ matrix:
 
 script:
   - sbt doc
-  - echo lourkeur.github.io/processing > _dist/CNAME
+  - echo lourkeur.github.io/coprocessing > _dist/CNAME
 
 deploy:
   provider: pages
