@@ -34,6 +34,11 @@ lazy val p3backend = project
     libraryDependencies += "org.processing" % "core" % processingVersion,
   )
 
+lazy val root = (project in file("."))
+  .settings(sharedSettings)
+  .dependsOn(core)
+  .settings(moduleName := "coprocessing")
+
 lazy val demo = project
   .settings(sharedSettings)
-  .dependsOn(core, p3backend)
+  .dependsOn(root, p3backend)

@@ -1,6 +1,6 @@
 package hello
 
-import coprocessing.core._
+import coprocessing._
 import coprocessing.p3._
 
 class Hello(using P3LegacyOps) extends Sketch {
