@@ -2,7 +2,7 @@
 
 Coprocessing
 is an attempt to interface
-Processing, the well-known computer graphics programming environment,
+Processing, the well-known Computer Graphics programming environment,
 with the upcoming Scala 3 language and its ecosystem.
 
 # Why?
@@ -10,14 +10,14 @@ with the upcoming Scala 3 language and its ecosystem.
 - Ergonomy and expressivity:
 the Processing language is,
 at the time of writing,
-equivalent to Java 1.5
+based on Java 1.5
 which came out in 2004,
 the same year that Scala 1.0 was released.
-Based on that knowledge,
-one could hypothesize that
-Processing may not be taking full advantage of the
+Knowing that,
+one could wonder if
+Processing is taking full advantage of the
 advances that have been made in programming language design in recent decades.
-That hypothesis turns out to be correct.
+In my opinion, it largely doesn't.
 Scala 3 is a potent programming language that can bring those advances
 while remaining fully binary-compatible with Processing as it currently stands.
 
