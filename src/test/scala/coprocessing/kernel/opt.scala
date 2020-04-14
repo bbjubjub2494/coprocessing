@@ -19,4 +19,11 @@ object OptSuite extends BaseSuite {
   {
     checkAll("Eq[Opt[Boolean]]", EqTests[Opt[Boolean]].eqv)
   }
+  {
+    // good to know whether .equals "just works"
+    def fromUniversalEquals[A](using Eql[A,A]) =
+      given Eq[A] = Eq.fromUniversalEquals
+      EqTests[A]
+    checkAll("Eq.fromUniversalEquals[Opt[Boolean]]", fromUniversalEquals[Opt[Boolean]].eqv)
+  }
 }
