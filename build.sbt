@@ -1,4 +1,5 @@
 val catsVersion = "2.1.1"
+val minitestVersion = "2.7.0"
 val processingVersion = "3.3.7"
 
 lazy val sharedSettings = Seq(
@@ -37,7 +38,13 @@ lazy val p3backend = project
 lazy val root = (project in file("."))
   .settings(sharedSettings)
   .dependsOn(core)
-  .settings(moduleName := "coprocessing")
+  .settings(
+    moduleName := "coprocessing",
+    libraryDependencies += ("org.typelevel" %% "cats-core" % catsVersion % Test).withDottyCompat(scalaVersion.value),
+    libraryDependencies += ("org.typelevel" %% "cats-laws" % catsVersion % Test).withDottyCompat(scalaVersion.value),
+    libraryDependencies += ("io.monix" %% "minitest-laws" % minitestVersion % Test).withDottyCompat(scalaVersion.value),
+    testFrameworks += new TestFramework("minitest.runner.Framework")
+  )
 
 lazy val demo = project
   .settings(sharedSettings)
