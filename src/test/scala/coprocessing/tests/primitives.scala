@@ -1,9 +1,8 @@
 package coprocessing.tests
 
 import coprocessing.kernel.primitives.{_, given _}
-import spire.laws.{given _}
+import spire.laws.{_, given _}
 import cats.Eq
-import cats.kernel.instances.float._
 import cats.kernel.laws.IsEqArrow
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 import cats.kernel.laws.discipline.EqTests
@@ -43,12 +42,12 @@ object PrimitivesSuite extends BaseSuite {
   {
     given Eq[Scalar] = relaxedScalarEq
     // TODO: multiplicative inverse
-    checkAll("Ring[Matrix]", algebra.laws.RingLaws[Matrix].rng)
+    checkAll("Ring[Matrix]", RingLaws[Matrix].rng)
   }
 
   {
     given Eq[Scalar] = relaxedScalarEq
     given Arbitrary[Scalar] = associativeArbitraryScalar
-    checkAll("VectorSpace[Vector]", spire.laws.VectorSpaceLaws[Vector, Scalar].vectorSpace)
+    checkAll("VectorSpace[Vector]", VectorSpaceLaws[Vector, Scalar].vectorSpace)
   }
 }
