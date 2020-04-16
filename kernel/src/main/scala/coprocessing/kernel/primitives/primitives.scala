@@ -5,10 +5,15 @@
 */
 package coprocessing.kernel.primitives
 
+import unsafe.freeze
+
 import cats.kernel.Eq
 
-/** Type of scalar values */
-type Scalar = Float
+private def dot4(v1: IArray[Scalar], off1: Int)(v2: IArray[Scalar], off2: Int): Scalar =
+  v1(off1  ) * v2(off2  ) +
+  v1(off1+1) * v2(off2+1) +
+  v1(off1+2) * v2(off2+2) +
+  v1(off1+3) * v2(off2+3)
 
 /** Row-major 4x4 matrix */
 opaque type Matrix <: IArray[Scalar] = IArray[Scalar]
@@ -17,30 +22,35 @@ opaque type Vector <: IArray[Scalar] = IArray[Scalar]
 /** Column-major 4xN */
 opaque type VectorArray <: IArray[Scalar] = IArray[Scalar]
 /** mutable column-major 4xN */
-opaque type MVectorArray = Array[Scalar]
+opaque type MVectorArray <: Array[Scalar] = Array[Scalar]
 
-@inline private def dot4(v1: IArray[Scalar], off1: Int)(v2: IArray[Scalar], off2: Int): Scalar =
-  v1(off1  ) * v2(off2  ) +
-  v1(off1+1) * v2(off2+1) +
-  v1(off1+2) * v2(off2+2) +
-  v1(off1+3) * v2(off2+3)
-
-/** Unsafe casts that are sometimes needed internally
- */
-private object unsafe {
-/** Obtain a immutable-typed reference to a mutable array.
- * To be used cautiously and with ownership in mind.
- */
-def (self: Array[Scalar]).freeze: IArray[Scalar] =
-  self.asInstanceOf[IArray[Scalar]]
-/** Obtain a mutable-typed reference to an immutable array.
- * To be used VERY cautiously!
- */
-def (self: IArray[Scalar]).unfreeze: Array[Scalar] =
-  self.asInstanceOf[Array[Scalar]]
+given (using Eq[Scalar]) as Eq[Vector] = Eq.instance {
+    (v1, v2) =>
+      Eq.eqv(v1(0), v2(0)) &
+      Eq.eqv(v1(1), v2(1)) &
+      Eq.eqv(v1(2), v2(2)) &
+      Eq.eqv(v1(3), v2(3))
 }
 
-import unsafe._
+given (using Eq[Scalar]) as Eq[Matrix] = Eq.instance {
+    (m1, m2) =>
+      Eq.eqv(m1( 0), m2( 0)) &
+      Eq.eqv(m1( 1), m2( 1)) &
+      Eq.eqv(m1( 2), m2( 2)) &
+      Eq.eqv(m1( 3), m2( 3)) &&
+      Eq.eqv(m1( 4), m2( 4)) &
+      Eq.eqv(m1( 5), m2( 5)) &
+      Eq.eqv(m1( 6), m2( 6)) &
+      Eq.eqv(m1( 7), m2( 7)) &&
+      Eq.eqv(m1( 8), m2( 8)) &
+      Eq.eqv(m1( 9), m2( 9)) &
+      Eq.eqv(m1(10), m2(10)) &
+      Eq.eqv(m1(11), m2(11)) &&
+      Eq.eqv(m1(12), m2(12)) &
+      Eq.eqv(m1(13), m2(13)) &
+      Eq.eqv(m1(14), m2(14)) &
+      Eq.eqv(m1(15), m2(15))
+}
 
 /** Build a [Matrix](Matrix) from its scalar components. */
 def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar,
@@ -76,7 +86,7 @@ def (batch: MVectorArray).batchTransformInplace(mat: Matrix): Unit =
 
 def (mat: MVectorArray).transposeInplace(): Unit =
   require(mat.length == 16)
-  @inline def swap(i: Int, j: Int) =
+  inline def swap(i: Int, j: Int) =
     val tmp = mat(i)
     mat(i) = mat(j)
     mat(j) = tmp
@@ -87,9 +97,6 @@ def (mat: MVectorArray).transposeInplace(): Unit =
   swap( 7, 13)
   swap(11, 14)
 
-def cloneA(a: IArray[Scalar]): Array[Scalar] =
-  Array.copyOf(a.unfreeze, a.length)
-
 def cloneV(v: Vector): MVectorArray =
   cloneA(v)
 
@@ -97,12 +104,6 @@ def cloneCols(m: Matrix): MVectorArray =
   val r: MVectorArray = cloneA(m)
   r.transposeInplace()  // column major
   r
-
-def mulSA(s: Scalar, a: IArray[Scalar]): IArray[Scalar] =
-  val r = cloneA(a)
-  for i <- 0 until r.length do
-    r(i) *= s
-  r.freeze
 
 def mulSV(s: Scalar, v: Vector): Vector =
   mulSA(s, v)
@@ -113,7 +114,7 @@ def mulSM(s: Scalar, m: Matrix): Matrix =
 def mulMV(m: Matrix, v: Vector): Vector =
   val r = cloneV(v)
   r.batchTransformInplace(m)
-  r.freeze
+  freeze(r)
 
 def mulMM(m1: Matrix, m2: Matrix): Matrix =
   val r = cloneCols(m2)
@@ -137,23 +138,8 @@ def foldMulMs(i: Iterator[Matrix]): Matrix =
 def dotVV(v1: Vector, v2: Vector): Scalar =
   dot4(v1, 0)(v2, 0)
 
-def addAA(a1: IArray[Scalar], a2: IArray[Scalar]): IArray[Scalar] =
-  assert(a1.length == a2.length)
-  val r = cloneA(a1)
-  for i <- 0 until a1.length do
-    r(i) += a2(i)
-  r.freeze
-
 def addVV(v1: Vector, v2: Vector): Vector =
   addAA(v1, v2)
 
 def addMM(v1: Matrix, v2: Matrix): Matrix =
   addAA(v1, v2)
-
-given (using Eq[Scalar]) as Eq[Vector] = Eq.instance {
-    (v1, v2) => (0 until 4).forall { i => Eq.eqv(v1(i), v2(i)) }
-}
-
-given (using Eq[Scalar]) as Eq[Matrix] = Eq.instance {
-    (m1, m2) => (0 until 16).forall { i => Eq.eqv(m1(i), m2(i)) }
-}

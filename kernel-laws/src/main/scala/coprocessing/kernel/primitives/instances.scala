@@ -7,15 +7,15 @@ import org.scalacheck.util.Pretty
 
 import spire.algebra._
 
-given Field[Float] = {
+given Field[Scalar] = {
   import spire.std.float.{given _}
-  summon[Field[Float]]
+  summon[Field[Scalar]]
 }
 
-given Arbitrary[Vector] = Arbitrary(Gen.resultOf(Vector))
-given Arbitrary[Matrix] = Arbitrary(Gen.resultOf(Matrix))
-given Cogen[Vector] = Cogen[Array[Scalar]].contramap(_.unfreeze)
-given Cogen[Matrix] = Cogen[Array[Scalar]].contramap(_.unfreeze)
+given (using Arbitrary[Scalar]) as Arbitrary[Vector] = Arbitrary(Gen.resultOf(Vector))
+given (using Arbitrary[Scalar]) as Arbitrary[Matrix] = Arbitrary(Gen.resultOf(Matrix))
+given (using Cogen[Array[Scalar]]) as Cogen[Vector] = Cogen[Array[Scalar]].contramap(_.unfreeze)
+given (using Cogen[Array[Scalar]]) as Cogen[Matrix] = Cogen[Array[Scalar]].contramap(_.unfreeze)
 
 given (IArray[Scalar] => Pretty) =
   _.unfreeze.mkString("[",", ","]")
