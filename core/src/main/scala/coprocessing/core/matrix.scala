@@ -17,7 +17,7 @@ object Vector3D {
 }
 
 extension Vector3DOps on (self: Vector3D) {
-  def toArray: IArray[Scalar] = unwrapV(self)
+  def toArray: IArray[Scalar] = self
 
   @annotation.infix def dot(other: Vector3D): Scalar = dotVV(self, other)
 
@@ -42,12 +42,12 @@ object Matrix3D {
            (n10: Scalar, n11: Scalar, n12: Scalar, n13: Scalar)
            (n20: Scalar, n21: Scalar, n22: Scalar, n23: Scalar)
            (n30: Scalar, n31: Scalar, n32: Scalar, n33: Scalar): Matrix3D =
-    Matrix(n00, n01, n02, n03)(n10, n11, n12, n13)(n20, n21, n22, n23)(n30, n31, n32, n33)
+    Matrix(n00, n01, n02, n03,n10, n11, n12, n13,n20, n21, n22, n23,n30, n31, n32, n33)
   val Identity: Matrix3D = IdentityMatrix
 }
 
 extension Matrix3DOps on (self: Matrix3D) {
-  def toArray: IArray[Scalar] = unwrapM(self)
+  def toArray: IArray[Scalar] = self
 
   def apply(v: Vector3D): Vector3D = mulMV(self, v)
   def compose(other: Matrix3D): Matrix3D = mulMM(self, other)
