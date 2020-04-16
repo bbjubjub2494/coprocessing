@@ -23,16 +23,22 @@ opaque type MVectorArray = Array[Scalar]
   v1(off1+2) * v2(off2+2) +
   v1(off1+3) * v2(off2+3)
 
+/** Unsafe casts that are sometimes needed internally
+ */
+private object unsafe {
 /** Obtain a immutable-typed reference to a mutable array.
  * To be used cautiously and with ownership in mind.
  */
-private def (self: Array[Scalar]).freeze: IArray[Scalar] =
+def (self: Array[Scalar]).freeze: IArray[Scalar] =
   self.asInstanceOf[IArray[Scalar]]
 /** Obtain a mutable-typed reference to an immutable array.
  * To be used VERY cautiously!
  */
-private def (self: IArray[Scalar]).unfreeze: Array[Scalar] =
+def (self: IArray[Scalar]).unfreeze: Array[Scalar] =
   self.asInstanceOf[Array[Scalar]]
+}
+
+import unsafe._
 
 /** Build a [Matrix](Matrix) from its scalar components. */
 def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar)
