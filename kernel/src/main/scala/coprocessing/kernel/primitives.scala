@@ -5,6 +5,8 @@
 */
 package coprocessing.kernel.primitives
 
+import cats.kernel.Eq
+
 /** Type of scalar values */
 type Scalar = Float
 
@@ -41,10 +43,10 @@ def (self: IArray[Scalar]).unfreeze: Array[Scalar] =
 import unsafe._
 
 /** Build a [Matrix](Matrix) from its scalar components. */
-def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar)
-          (n10: Scalar, n11: Scalar, n12: Scalar, n13: Scalar)
-          (n20: Scalar, n21: Scalar, n22: Scalar, n23: Scalar)
-          (n30: Scalar, n31: Scalar, n32: Scalar, n33: Scalar): Matrix =
+def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar,
+           n10: Scalar, n11: Scalar, n12: Scalar, n13: Scalar,
+           n20: Scalar, n21: Scalar, n22: Scalar, n23: Scalar,
+           n30: Scalar, n31: Scalar, n32: Scalar, n33: Scalar): Matrix =
   IArray[Scalar](n00, n01, n02, n03,
                  n10, n11, n12, n13,
                  n20, n21, n22, n23,
@@ -54,14 +56,12 @@ def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar)
 def Vector(x: Scalar, y: Scalar, z: Scalar, w: Scalar): Vector =
   IArray[Scalar](x, y, z, w)
 
-/** Return the underlying array. */
-def unwrapM(m: Matrix): IArray[Scalar] = m
-/** Return the underlying array. */
-def unwrapV(v: Vector): IArray[Scalar] = v
-
+/** Multiples of the identity matrix */
+def scalarMatrix(s: Scalar): Matrix =
+  Matrix(s,0,0,0,0,s,0,0,0,0,s,0,0,0,0,s)
 /** Shared instance of the identity matrix. */
 final val IdentityMatrix: Matrix =
-  Matrix(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)
+  scalarMatrix(1)
 
 def (batch: MVectorArray).batchTransformInplace(mat: Matrix): Unit =
   for i <- 0 until batch.length by 4 do
@@ -87,15 +87,28 @@ def (mat: MVectorArray).transposeInplace(): Unit =
   swap( 7, 13)
   swap(11, 14)
 
+def cloneA(a: IArray[Scalar]): Array[Scalar] =
+  Array.copyOf(a.unfreeze, a.length)
+
 def cloneV(v: Vector): MVectorArray =
-  val r = new MVectorArray(4)
-  Array.copy(v.unfreeze, 0, r, 0, 4)
-  r
-def cloneM(v: Matrix): MVectorArray =
-  val r = new MVectorArray(16)
-  Array.copy(v.unfreeze, 0, r, 0, 16)
+  cloneA(v)
+
+def cloneCols(m: Matrix): MVectorArray =
+  val r: MVectorArray = cloneA(m)
   r.transposeInplace()  // column major
   r
+
+def mulSA(s: Scalar, a: IArray[Scalar]): IArray[Scalar] =
+  val r = cloneA(a)
+  for i <- 0 until r.length do
+    r(i) *= s
+  r.freeze
+
+def mulSV(s: Scalar, v: Vector): Vector =
+  mulSA(s, v)
+
+def mulSM(s: Scalar, m: Matrix): Matrix =
+  mulSA(s, m)
 
 def mulMV(m: Matrix, v: Vector): Vector =
   val r = cloneV(v)
@@ -103,7 +116,7 @@ def mulMV(m: Matrix, v: Vector): Vector =
   r.freeze
 
 def mulMM(m1: Matrix, m2: Matrix): Matrix =
-  val r = cloneM(m2)
+  val r = cloneCols(m2)
   r.batchTransformInplace(m1)
   r.transposeInplace()  // row major
   r.freeze
@@ -115,7 +128,7 @@ def foldMulMs(i: Iterator[Matrix]): Matrix =
   val m0 = i.next()
   if !i.hasNext
     return m0
-  val r = cloneM(m0)
+  val r = cloneCols(m0)
   while i.hasNext do
     r.batchTransformInplace(i.next())
   r.transposeInplace()  // row major
@@ -123,3 +136,24 @@ def foldMulMs(i: Iterator[Matrix]): Matrix =
 
 def dotVV(v1: Vector, v2: Vector): Scalar =
   dot4(v1, 0)(v2, 0)
+
+def addAA(a1: IArray[Scalar], a2: IArray[Scalar]): IArray[Scalar] =
+  assert(a1.length == a2.length)
+  val r = cloneA(a1)
+  for i <- 0 until a1.length do
+    r(i) += a2(i)
+  r.freeze
+
+def addVV(v1: Vector, v2: Vector): Vector =
+  addAA(v1, v2)
+
+def addMM(v1: Matrix, v2: Matrix): Matrix =
+  addAA(v1, v2)
+
+given (using Eq[Scalar]) as Eq[Vector] = Eq.instance {
+    (v1, v2) => (0 until 4).forall { i => Eq.eqv(v1(i), v2(i)) }
+}
+
+given (using Eq[Scalar]) as Eq[Matrix] = Eq.instance {
+    (m1, m2) => (0 until 16).forall { i => Eq.eqv(m1(i), m2(i)) }
+}

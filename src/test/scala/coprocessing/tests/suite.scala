@@ -12,6 +12,8 @@ import org.scalacheck.Prop
 trait MinimalTestSuite extends AbstractTestSuite {
   given SourceLocation = SourceLocation(Some("<unknown>"), None, 0)
 
+  export Void.toVoid
+
   def test(name: String)(f: => Void): Unit =
     synchronized {
       if isInitialized then
