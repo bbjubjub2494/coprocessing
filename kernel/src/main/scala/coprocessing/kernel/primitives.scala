@@ -9,11 +9,11 @@ package coprocessing.kernel.primitives
 type Scalar = Float
 
 /** Row-major 4x4 matrix */
-opaque type Matrix = IArray[Scalar]
+opaque type Matrix <: IArray[Scalar] = IArray[Scalar]
 /** 4-long column vector */
-opaque type Vector = IArray[Scalar]
+opaque type Vector <: IArray[Scalar] = IArray[Scalar]
 /** Column-major 4xN */
-opaque type VectorArray = IArray[Scalar]
+opaque type VectorArray <: IArray[Scalar] = IArray[Scalar]
 /** mutable column-major 4xN */
 opaque type MVectorArray = Array[Scalar]
 
