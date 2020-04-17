@@ -1,3 +1,8 @@
+homepage := Some(url("https://coprocessing.bettens.info"))
+licenses := Seq(
+  "LGPL-3.0" -> url("https://opensource.org/licenses/LGPL-3.0"),
+)
+
 val catsVersion = "2.1.1"
 val minitestVersion = "2.7.0"
 val processingVersion = "3.3.7"
