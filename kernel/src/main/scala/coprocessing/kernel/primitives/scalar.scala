@@ -14,31 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Coprocessing.  If not, see <https://www.gnu.org/licenses/>.
  */
-package coprocessing.core
+package coprocessing.kernel.primitives
 
-trait Sketch {
-  def settings(): (SizeOps) ?=> Unit = ()
-  def setup(): (FrameRateOps) ?=> Unit = ()
-  def draw(): (FrameRateOps) ?=> Unit = ()
+import unsafe._
+
+import cats.kernel.Eq
+
+
+/** Type of scalar values */
+type Scalar = Float
+
+given Eq[Scalar] = {
+  import cats.kernel.instances.float._
+  summon[Eq[Scalar]]
 }
 
-trait SizeOps {
-    def size(width: Int, height: Int): Unit
-}
-inline def size(width: Int, height: Int)(using SizeOps) =
-  summon[SizeOps].size(width, height)
+def cloneA(a: IArray[Scalar]): Array[Scalar] =
+  Array.copyOf(a.unfreeze, a.length)
 
-trait FrameRateOps {
-    def frameRate: Float
-    def frameRate(fps: Float): Unit
-}
-inline def frameRate(using FrameRateOps) =
-  summon[FrameRateOps].frameRate
-inline def frameRate(fps: Float)(using FrameRateOps) =
-  summon[FrameRateOps].frameRate(fps)
+def mulSA(s: Scalar, a: IArray[Scalar]): IArray[Scalar] =
+  val r = cloneA(a)
+  for i <- 0 until r.length do
+    r(i) *= s
+  r.freeze
 
-trait LegacyOps[C] {
-    def legacy[A](f: C ?=> A): A
-}
-inline def legacy[C, A](f: C ?=> A)(using LegacyOps[C]): A =
-  summon[LegacyOps[C]].legacy(f)
+def addAA(a1: IArray[Scalar], a2: IArray[Scalar]): IArray[Scalar] =
+  assert(a1.length == a2.length)
+  val r = cloneA(a1)
+  for i <- 0 until r.length do
+    r(i) += a2(i)
+  r.freeze

@@ -14,31 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Coprocessing.  If not, see <https://www.gnu.org/licenses/>.
  */
-package coprocessing.core
+package coprocessing.kernel.primitives
 
-trait Sketch {
-  def settings(): (SizeOps) ?=> Unit = ()
-  def setup(): (FrameRateOps) ?=> Unit = ()
-  def draw(): (FrameRateOps) ?=> Unit = ()
+/** Unsafe casts that are sometimes needed internally
+ */
+private object unsafe {
+  /** Obtain a immutable-typed reference to a mutable array.
+   * To be used cautiously and with ownership in mind.
+   */
+  def [T <: Array[Scalar]](self: T).freeze: IArray[Scalar] =
+    self.asInstanceOf[IArray[Scalar]]
+  /** Obtain a mutable-typed reference to an immutable array.
+   * To be used VERY cautiously!
+   */
+  def (self: IArray[Scalar]).unfreeze: Array[Scalar] =
+    self.asInstanceOf[Array[Scalar]]
 }
-
-trait SizeOps {
-    def size(width: Int, height: Int): Unit
-}
-inline def size(width: Int, height: Int)(using SizeOps) =
-  summon[SizeOps].size(width, height)
-
-trait FrameRateOps {
-    def frameRate: Float
-    def frameRate(fps: Float): Unit
-}
-inline def frameRate(using FrameRateOps) =
-  summon[FrameRateOps].frameRate
-inline def frameRate(fps: Float)(using FrameRateOps) =
-  summon[FrameRateOps].frameRate(fps)
-
-trait LegacyOps[C] {
-    def legacy[A](f: C ?=> A): A
-}
-inline def legacy[C, A](f: C ?=> A)(using LegacyOps[C]): A =
-  summon[LegacyOps[C]].legacy(f)

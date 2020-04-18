@@ -1,3 +1,8 @@
+homepage := Some(url("https://coprocessing.bettens.info"))
+licenses := Seq(
+  "LGPL-3.0" -> url("https://opensource.org/licenses/LGPL-3.0"),
+)
+
 val catsVersion = "2.1.1"
 val minitestVersion = "2.7.0"
 val processingVersion = "3.3.7"
@@ -6,10 +11,15 @@ val spireVersion = "0.17.0-M1"
 val algebraVersion = "2.0.1"
 
 val libraries = new {
+  val `algebra-laws` = "org.typelevel" %% "algebra-laws" % algebraVersion
+  val `cats-core` = "org.typelevel" %% "cats-core" % catsVersion
+  val `cats-kernel` = "org.typelevel" %% "cats-kernel" % catsVersion
+  val `cats-laws` = "org.typelevel" %% "cats-laws" % catsVersion
+  val `minitest-laws` = "io.monix" %% "minitest-laws" % minitestVersion
+  val `processing-core` = "org.processing" % "core" % processingVersion
   val scalacheck = "org.scalacheck" %% "scalacheck" % scalacheckVersion
   val spire = "org.typelevel" %% "spire" % spireVersion
   val `spire-laws` = "org.typelevel" %% "spire-laws" % spireVersion
-  val `algebra-laws` = "org.typelevel" %% "algebra-laws" % algebraVersion
 }
 
 lazy val sharedSettings = Seq(
@@ -28,7 +38,7 @@ lazy val sharedSettings = Seq(
 lazy val kernel = project
   .settings(sharedSettings)
   .settings(
-    libraryDependencies += ("org.typelevel" %% "cats-kernel" % catsVersion).withDottyCompat(scalaVersion.value),
+    libraryDependencies += libraries.`cats-kernel`.withDottyCompat(scalaVersion.value),
   )
 
 lazy val `kernel-laws` = project
@@ -44,14 +54,14 @@ lazy val core = project
   .settings(sharedSettings)
   .dependsOn(kernel)
   .settings(
-    libraryDependencies += ("org.typelevel" %% "cats-core" % catsVersion).withDottyCompat(scalaVersion.value),
+    libraryDependencies += libraries.`cats-core`.withDottyCompat(scalaVersion.value),
   )
 
 lazy val p3backend = project
   .settings(sharedSettings)
   .dependsOn(core)
   .settings(
-    libraryDependencies += "org.processing" % "core" % processingVersion,
+    libraryDependencies += libraries.`processing-core`,
   )
 
 lazy val root = (project in file("."))
@@ -60,9 +70,9 @@ lazy val root = (project in file("."))
   .dependsOn(`kernel-laws` % Test)
   .settings(
     moduleName := "coprocessing",
-    libraryDependencies += ("org.typelevel" %% "cats-core" % catsVersion % Test).withDottyCompat(scalaVersion.value),
-    libraryDependencies += ("org.typelevel" %% "cats-laws" % catsVersion % Test).withDottyCompat(scalaVersion.value),
-    libraryDependencies += ("io.monix" %% "minitest-laws" % minitestVersion % Test).withDottyCompat(scalaVersion.value),
+    libraryDependencies += (libraries.`cats-core` % Test).withDottyCompat(scalaVersion.value),
+    libraryDependencies += (libraries.`cats-laws` % Test).withDottyCompat(scalaVersion.value),
+    libraryDependencies += (libraries.`minitest-laws` % Test).withDottyCompat(scalaVersion.value),
     libraryDependencies += (libraries.`spire-laws` % Test).withDottyCompat(scalaVersion.value),
     testFrameworks += new TestFramework("minitest.runner.Framework")
   )

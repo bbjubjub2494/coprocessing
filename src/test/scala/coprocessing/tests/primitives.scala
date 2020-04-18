@@ -1,9 +1,24 @@
+/* Copyright 2020 Julie Bettens
+ * This file is part of Coprocessing.
+
+ * Coprocessing is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+
+ * Coprocessing is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Coprocessing.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package coprocessing.tests
 
 import coprocessing.kernel.primitives.{_, given _}
-import spire.laws.{given _}
+import spire.laws.{_, given _}
 import cats.Eq
-import cats.kernel.instances.float._
 import cats.kernel.laws.IsEqArrow
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 import cats.kernel.laws.discipline.EqTests
@@ -43,12 +58,12 @@ object PrimitivesSuite extends BaseSuite {
   {
     given Eq[Scalar] = relaxedScalarEq
     // TODO: multiplicative inverse
-    checkAll("Ring[Matrix]", algebra.laws.RingLaws[Matrix].rng)
+    checkAll("Ring[Matrix]", RingLaws[Matrix].rng)
   }
 
   {
     given Eq[Scalar] = relaxedScalarEq
     given Arbitrary[Scalar] = associativeArbitraryScalar
-    checkAll("VectorSpace[Vector]", spire.laws.VectorSpaceLaws[Vector, Scalar].vectorSpace)
+    checkAll("VectorSpace[Vector]", VectorSpaceLaws[Vector, Scalar].vectorSpace)
   }
 }
