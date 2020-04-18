@@ -1,0 +1,44 @@
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Int")
+
+TermRef(NoPrefix(), "x")
+
+TypeBounds(TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Nothing"), TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Any"))
+
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Nothing")
+
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Any")
+
+TypeRef(NoPrefix(), "T")
+
+TypeRef(NoPrefix(), "T")
+
+TypeBounds(TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "<root>")), "scala"), "Int"), TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "<root>")), "scala"), "Int"))
+
+TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "<root>")), "scala"), "Int")
+
+TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "<root>")), "scala"), "Int")
+
+TypeRef(NoPrefix(), "T")
+
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Unit")
+
+TypeRef(ThisType(TypeRef(NoPrefix(), "lang")), "Object")
+
+TypeBounds(TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Nothing"), TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Any"))
+
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Nothing")
+
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Any")
+
+Refinement(TypeRef(NoPrefix(), "Foo"), "X", TypeBounds(TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "scala")), "Predef"), "String"), TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "scala")), "Predef"), "String")))
+
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Unit")
+
+TypeRef(NoPrefix(), "Foo")
+
+TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "scala")), "Predef"), "String")
+
+TypeRef(NoPrefix(), "$anon")
+
+Refinement(TypeRef(NoPrefix(), "Foo"), "X", TypeBounds(TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "scala")), "Predef"), "String"), TypeRef(TermRef(ThisType(TypeRef(NoPrefix(), "scala")), "Predef"), "String")))
+

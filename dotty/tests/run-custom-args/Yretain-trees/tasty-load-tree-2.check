@@ -1,0 +1,2 @@
+DefDef("foo", Nil, Nil, Inferred(), None)
+ValDef("bar", Inferred(), None)

@@ -1,0 +1,6 @@
+-- [E141] Type Error: tests/neg/kinds2.scala:14:4 ----------------------------------------------------------------------
+14 |  f[C] // error: missing type parameter(s)
+   |    ^
+   |    Missing type parameter for Test.C
+
+longer explanation available when compiling with `-explain`

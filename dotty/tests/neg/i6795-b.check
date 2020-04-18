@@ -1,0 +1,4 @@
+-- Error: tests/neg/i6795-b.scala:1:11 ---------------------------------------------------------------------------------
+1 |sealed def y: Int = 1 // error
+  |           ^
+  |            values cannot be sealed

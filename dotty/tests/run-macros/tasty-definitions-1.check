@@ -1,0 +1,172 @@
+_root_
+scala
+Any
+AnyVal
+Object
+AnyRef
+Any
+Nothing
+Unit
+Byte
+Short
+Char
+Int
+Long
+Float
+Double
+Boolean
+String
+Class
+Array
+Predef
+lang
+Array
+apply
+clone
+length
+update
+<repeated>
+Option
+None
+Some
+Product
+Function0
+Function1
+Function2
+Function3
+Function4
+Function5
+Function6
+Function7
+Function8
+Function9
+Function10
+Function11
+Function12
+Function13
+Function14
+Function15
+Function16
+Function17
+Function18
+Function19
+Function20
+Function21
+Function22
+Function23
+Function24
+Function25
+ContextFunction0
+ContextFunction1
+ContextFunction2
+ContextFunction3
+ContextFunction4
+ContextFunction5
+ContextFunction6
+ContextFunction7
+ContextFunction8
+ContextFunction9
+ContextFunction10
+ContextFunction11
+ContextFunction12
+ContextFunction13
+ContextFunction14
+ContextFunction15
+ContextFunction16
+ContextFunction17
+ContextFunction18
+ContextFunction19
+ContextFunction20
+ContextFunction21
+ContextFunction22
+ContextFunction23
+ContextFunction24
+ContextFunction25
+ErasedFunction1
+ErasedFunction2
+ErasedFunction3
+ErasedFunction4
+ErasedFunction5
+ErasedFunction6
+ErasedFunction7
+ErasedFunction8
+ErasedFunction9
+ErasedFunction10
+ErasedFunction11
+ErasedFunction12
+ErasedFunction13
+ErasedFunction14
+ErasedFunction15
+ErasedFunction16
+ErasedFunction17
+ErasedFunction18
+ErasedFunction19
+ErasedFunction20
+ErasedFunction21
+ErasedFunction22
+ErasedFunction23
+ErasedFunction24
+ErasedFunction25
+ErasedContextFunction1
+ErasedContextFunction2
+ErasedContextFunction3
+ErasedContextFunction4
+ErasedContextFunction5
+ErasedContextFunction6
+ErasedContextFunction7
+ErasedContextFunction8
+ErasedContextFunction9
+ErasedContextFunction10
+ErasedContextFunction11
+ErasedContextFunction12
+ErasedContextFunction13
+ErasedContextFunction14
+ErasedContextFunction15
+ErasedContextFunction16
+ErasedContextFunction17
+ErasedContextFunction18
+ErasedContextFunction19
+ErasedContextFunction20
+ErasedContextFunction21
+ErasedContextFunction22
+ErasedContextFunction23
+ErasedContextFunction24
+ErasedContextFunction25
+Tuple2
+Tuple3
+Tuple4
+Tuple5
+Tuple6
+Tuple7
+Tuple8
+Tuple9
+Tuple10
+Tuple11
+Tuple12
+Tuple13
+Tuple14
+Tuple15
+Tuple16
+Tuple17
+Tuple18
+Tuple19
+Tuple20
+Tuple21
+Tuple22
+List(Unit, Boolean, Byte, Short, Int, Long, Float, Double, Char)
+List(Byte, Short, Int, Long, Float, Double, Char)
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Unit")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Byte")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Char")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Int")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Long")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Float")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Double")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Boolean")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Any")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "AnyVal")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "AnyRef")
+TypeRef(ThisType(TypeRef(NoPrefix(), "lang")), "Object")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Nothing")
+TypeRef(ThisType(TypeRef(NoPrefix(), "scala")), "Null")
+TypeRef(ThisType(TypeRef(NoPrefix(), "lang")), "String")

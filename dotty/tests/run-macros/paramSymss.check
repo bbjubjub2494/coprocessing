@@ -1,0 +1,21 @@
+sym: Test$.a
+paramSymss: List()
+
+sym: Test$.b
+paramSymss: List(List(Test$._$i))
+
+sym: Test$.c
+paramSymss: List(List(Test$._$x), List(Test$._$y), List(Test$._$z))
+
+sym: Test$.d
+paramSymss: List(List(Test$._$T))
+
+sym: Test$.c
+paramSymss: List(List(Test$._$T, Test$._$U), List(Test$._$x, Test$._$x2), List(Test$._$y), List(Test$._$z))
+
+sym: Test.<init>
+paramSymss: List(List(Test._$T), List(Test._$a))
+
+sym: Test.<init>
+paramSymss: List(List(Test._$T), List(Test._$a, Test._$b))
+
