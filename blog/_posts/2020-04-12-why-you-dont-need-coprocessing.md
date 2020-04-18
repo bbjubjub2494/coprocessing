@@ -36,7 +36,7 @@ even at that early a stage of its development.
 As we realized in this article,
 thanks to the JVM,
 Processing can already be interfaced from any Scala version without any wrappers.
-At the end of this post is a Ammonite script that demonstrates that.
+At the end of this post is a [Ammonite] script that demonstrates that.
 Coprocessing will still have advantages over Coprocessing--,
 as I hope to show in the future,
 but it isn't strictly necessary.
@@ -46,6 +46,8 @@ lambda expressions,
 static members,
 language server support,
 and the entire Scala standard library.
+
+[Ammonite]: https://ammonite.io
 
 # Attachment
 ```scala
