@@ -1,0 +1,3 @@
+trait T {
+  object O
+}

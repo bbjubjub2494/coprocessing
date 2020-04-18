@@ -1,0 +1,3 @@
+6: Pattern Match Exhaustivity: FailsChild2(_)
+14: Pattern Match Exhaustivity: VarArgs1(_)
+27: Pattern Match Exhaustivity: SeqArgs2(_)

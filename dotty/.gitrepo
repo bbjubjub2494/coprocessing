@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/lampepfl/dotty
+	branch = master
+	commit = 06a118e751f200039f321e9f59bf3e3f5148f1c8
+	parent = b4afad0bf789e99d2835f81b12865a6a72677187
+	method = merge
+	cmdver = 0.4.1

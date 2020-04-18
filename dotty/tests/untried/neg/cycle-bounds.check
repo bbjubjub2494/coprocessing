@@ -1,0 +1,4 @@
+cycle-bounds.scala:5: error: illegal cyclic reference involving type T
+class NotOk[T <: Comparable[_ <: T]]
+                            ^
+1 error found

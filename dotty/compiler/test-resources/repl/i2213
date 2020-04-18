@@ -1,0 +1,9 @@
+scala> def x
+1 | def x
+  |      ^
+  |      Missing return type
+
+scala> def x: Int
+1 | def x: Int
+  |     ^
+  |Declaration of method x not allowed here: only classes can have declared but undefined members

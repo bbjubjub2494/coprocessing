@@ -1,0 +1,5 @@
+1
+{
+  val x: scala.Int = 1
+  scala.Predef.println(x.+(x))
+}

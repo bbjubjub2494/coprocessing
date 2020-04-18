@@ -1,0 +1,10 @@
+6
+{
+  val f: scala.Function1[scala.Int, scala.Int] {
+    def apply(x: scala.Int): scala.Int
+  } = ((`x₂`: scala.Int) => `x₂`.+(`x₂`))
+
+  (f: scala.Function1[scala.Int, scala.Int] {
+    def apply(x: scala.Int): scala.Int
+  })
+}.apply(3)

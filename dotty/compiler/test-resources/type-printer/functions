@@ -1,0 +1,10 @@
+scala> def toInt: Any => Int = ???
+def toInt: Any => Int
+scala> def hoFun: (Int => Int) => Int = ???
+def hoFun: (Int => Int) => Int
+scala> def curriedFun: Int => (Int => Int) = ???
+def curriedFun: Int => Int => Int
+scala> def tupFun: ((Int, Int)) => Int = ???
+def tupFun: ((Int, Int)) => Int
+scala> def binFun: (Int, Int) => Int = ???
+def binFun: (Int, Int) => Int

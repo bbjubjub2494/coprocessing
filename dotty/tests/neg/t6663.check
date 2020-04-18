@@ -1,0 +1,5 @@
+-- [E007] Type Mismatch Error: tests/neg/t6663.scala:16:32 -------------------------------------------------------------
+16 |  var v = new C(42).foo[String].get :Int // error
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |          Found:    String
+   |          Required: Int
