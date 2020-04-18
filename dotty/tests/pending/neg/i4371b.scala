@@ -1,3 +1,0 @@
-object App {
-  type T[G[X] <: X, F[X] <: G[F[X]]] // error: Recursion limit exceeded. Maybe there is an illegal cyclic reference? ...
-}

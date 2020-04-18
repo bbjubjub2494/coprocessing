@@ -1,4 +1,0 @@
-{
-  def f(x: scala.Int): scala.Int = ((`x₂`: scala.Int) => f(`x₂`)).apply(42)
-  ()
-}

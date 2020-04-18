@@ -1,4 +1,0 @@
-enum Bomb
-{
-    case Kaboom
-}

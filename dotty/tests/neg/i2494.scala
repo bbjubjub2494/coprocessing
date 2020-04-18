@@ -1,3 +1,0 @@
-enum
-object // error
-// error

@@ -1,5 +1,0 @@
-6
-{
-  def f(x: scala.Int): scala.Int = x.+(x)
-  f(3)
-}

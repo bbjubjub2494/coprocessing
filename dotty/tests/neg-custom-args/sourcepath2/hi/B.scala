@@ -1,2 +1,0 @@
-package hi
-class B

@@ -1,4 +1,0 @@
--- Error: tests/neg/summon-function.scala:2:23 -------------------------------------------------------------------------
-2 |  summon[Int => String] // error
-  |                       ^
-  |                       No implicit view available from Int => String.

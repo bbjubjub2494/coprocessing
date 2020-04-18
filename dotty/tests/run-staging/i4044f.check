@@ -1,5 +1,0 @@
-{
-  val e1: scala.Int = 3
-  val f1: scala.Int = 5
-  e1.+(2).+(f1)
-}

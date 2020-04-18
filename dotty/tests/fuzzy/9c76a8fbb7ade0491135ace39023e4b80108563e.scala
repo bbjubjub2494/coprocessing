@@ -1,1 +1,0 @@
-class i0(val i1: String) extends (i2 { val i3 = sys.error("") }

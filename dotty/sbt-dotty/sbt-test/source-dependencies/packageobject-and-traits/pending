@@ -1,4 +1,0 @@
-> compile
-$ copy-file changes/package.scala package.scala
-# clean compile fails correctly
--> compile
