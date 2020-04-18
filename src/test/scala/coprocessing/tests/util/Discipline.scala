@@ -14,22 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Coprocessing.  If not, see <https://www.gnu.org/licenses/>.
  */
-package coprocessing.tests
-
-import util._
+package coprocessing.tests.util
 
 import minitest.laws.Checkers
-import org.scalacheck.Test.Parameters
+import minitest.api._
+import org.typelevel.discipline.Laws
 
-trait BaseSuite extends MinimalTestSuite with Discipline with Checkers {
-  override lazy val checkConfig: Parameters =
-    Parameters.default
-      .withMinSuccessfulTests(100)
-      .withMaxDiscardRatio(5)
-
-  lazy val slowCheckConfig: Parameters =
-    Parameters.default
-      .withMinSuccessfulTests(10)
-      .withMaxDiscardRatio(50)
-      .withMaxSize(6)
+/** Integration with org.typelevel.discipline */
+trait Discipline { self: MinimalTestSuite & Checkers =>
+  def checkAll(name: String, ruleSet: Laws#RuleSet): Unit =
+    for (id, prop) <- ruleSet.all.properties do
+      test(s"$name.$id") {
+        check(prop)
+      }
 }
