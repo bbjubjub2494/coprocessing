@@ -64,6 +64,6 @@ object PrimitivesSuite extends BaseSuite {
   {
     given Eq[Scalar] = relaxedScalarEq
     given Arbitrary[Scalar] = associativeArbitraryScalar
-    checkAll("VectorSpace[Vector]", VectorSpaceLaws[Vector, Scalar].vectorSpace)
+    checkAll("VectorSpace[Vector]", VectorSpaceLaws[Vector, Scalar].innerProductSpace)
   }
 }
