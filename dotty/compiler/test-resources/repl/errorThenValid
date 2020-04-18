@@ -1,8 +1,0 @@
-scala> val xs = scala.collection.mutable.ListBuffer[Int]
-1 | val xs = scala.collection.mutable.ListBuffer[Int]
-  |          ^
-  |          Missing parameter type
-  |
-  |          I could not infer the type of the parameter elems.
-scala> val xs = scala.collection.mutable.ListBuffer[Int]()
-val xs: scala.collection.mutable.ListBuffer[Int] = ListBuffer()

@@ -1,4 +1,0 @@
-> run
-$ copy-file changes/build-no-fork.sbt build.sbt
-> reload
-> run

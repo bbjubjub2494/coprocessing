@@ -1,1 +1,0 @@
-@main def Test = println(mcr(true))

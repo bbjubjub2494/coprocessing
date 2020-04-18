@@ -1,5 +1,0 @@
-evaluating inner quote
-{
-  val b: scala.Int = 3
-  b.+(3)
-}

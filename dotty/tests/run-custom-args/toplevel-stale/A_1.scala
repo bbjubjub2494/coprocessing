@@ -1,1 +1,0 @@
-def foo234(x: Int): String = "old"

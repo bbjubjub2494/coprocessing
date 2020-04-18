@@ -1,8 +1,0 @@
-Outer
-Inner
-Inner.i
-About to reference Inner.i
-Inner.i
-About to reference O.N
-About to reference O.N
-About to reference O.N.apply()

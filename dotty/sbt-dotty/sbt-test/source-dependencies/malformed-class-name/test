@@ -1,3 +1,0 @@
-> compile
-$ copy-file changes/BooUser.java BooUser.java
-> compile

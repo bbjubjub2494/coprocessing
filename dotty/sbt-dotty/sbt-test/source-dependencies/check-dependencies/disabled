@@ -1,5 +1,0 @@
-# TODO: implement checkDependencies
-
-> compile
-
-> checkDependencies A: B C

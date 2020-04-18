@@ -1,3 +1,0 @@
-DefDef("foo", Nil, Nil, Inferred(), None)
-ValDef("bar", Inferred(), None)
-Bind("x", Ident("_"))

@@ -1,3 +1,0 @@
-8: Pattern Match Exhaustivity: _: A
-17: Pattern Match Exhaustivity: (_, None), (_, Some(_))
-28: Pattern Match Exhaustivity: (_, _)
