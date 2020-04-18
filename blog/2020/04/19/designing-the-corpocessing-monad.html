@@ -1,0 +1,282 @@
+<!-- This page was last generated on 2020-04-19 -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <title>Designing the Coprocessing Monad (draft)</title>
+
+        <link rel="icon" type="image/png" href="/images/favicon.png">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/dottydoc.css">
+        <link rel="stylesheet" href="/css/color-brewer.css"><!-- hljs theme -->
+
+        
+            <link rel="stylesheet" href="/css/toolbar.css">
+        
+            <link rel="stylesheet" href="/css/sidebar.css">
+        
+
+        <script src="/js/jquery.min.js"></script>
+    </head>
+    <body>
+        <header>
+    <nav class="navbar navbar-expand navbar-dark fixed-top">
+        <a id="menu-icon" title="Menu" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </a>
+        <a id="search-icon" title="Search" aria-label="Search">
+            <i class="fas fa-search"></i>
+        </a>
+        <span id="searchbar">
+            <input id="search-api-input" type="text" class="form-control" placeholder="Search API" aria-label="Search API">
+            <input id="baseurl-input" type="hidden" value="">
+        </span>
+        <div class="navbar-brand">
+            
+            <a href="/docs/index.html">
+                <div class="project-details">
+                    <h1>root Documentation</h1>
+                    <h2></h2>
+                </div>
+            </a>
+        </div>
+
+        
+    </nav>
+</header>
+
+<nav class="sidebar">
+    <ul class="toc">
+        <!-- Redacted documents -->
+        
+            <li class="leaf"><a href="/blog/index.html" >Blog</a></li>
+        
+        <!-- API documentation -->
+        
+        <li class="index-entities section">
+            <a onclick="toggleSection(this);">API</a>
+            <ul>
+            
+                <li class="index-entity entity-package section">
+                    <a class="package-toggle" onclick="toggleSection(this);">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                    <a class="entity-name" href="/api/coprocessing/index.html">
+                        coprocessing
+                    </a>
+                    <ul class="package-entities">
+                        
+                    </ul>
+                </li>
+            
+            </ul>
+        </li>
+        
+    </ul>
+</nav>
+
+<div id="content-wrapper">
+    <main class="container">
+    <header>
+        <h1>Designing the Coprocessing Monad (draft)</h1>
+        <div class="byline">
+            <time class="date">
+                <i class="far fa-calendar-alt"></i>
+                2020-04-19
+            </time>
+            <span class="author">
+                <i class="fas fa-pen-nib"></i>
+                Julie Bettens
+            </span>
+        </div>
+        
+    </header>
+
+    <p>In traditional functional programming,
+monads are pervasive.
+This isn't without reason:
+they are a powerful design pattern
+that can be used in pure programs.
+They are materialized by types, so
+it makes sense that
+even before we start programming,
+we would design our types and our monads.
+In this post, I will expose what monads I picked for the coprocessing API and why.</p>
+<p>Note that this post assumes at least a passing familiarity with the concept of monad.</p>
+<h1><a href="#io-monads" id="io-monads" class="anchor"></a>I/O monads</h1>
+<p>In Processing, we can interact with the outside world a lot.
+From a data flow perspective,
+we receive input while the program is running
+-- keypresses, image data --,
+and we can output data as well
+-- draw on the screen, write files --
+at any point in the program.
+These processes are modeled with an I/O monad in which all I/O operations can be wrapped.
+This makes it possible to reason about when they are executed in relation to each other,
+materialize them in the type system,
+and much more.</p>
+<p>Concretely, there are multiple implementations of the I/O monad
+already existing in the Scala ecosystem.
+It is known that they are <a href="https://degoes.net/articles/only-one-io">all equally expressive</a>,
+-- meaning that any program that can be written in one can be converted to another--
+and that they only differ in terms of performance.</p>
+<p>These monads also have great support for asynchronous programming,
+but for the time being, we are bound to the threading model of Processing 3
+so we will not be able to use them.</p>
+<h1><a href="#reader-monads" id="reader-monads" class="anchor"></a>Reader monads</h1>
+<p>A reader monad can be used to implement dependency injection.
+It can be implemented as a function of one argument and the appropriate composition operators.
+We have a need for dependency injection to pass the <code>PApplet</code> instance around in a sketch.</p>
+<p>In Scala specifically, the reader monad competes for dependency injection with <a href="https://dotty.epfl.ch/docs/reference/contextual/using-clauses.html">term inference</a>,
+and which to use depends on the situation.
+Thus, we will need to decide which one to use in Coprocessing.</p>
+<h1><a href="#the-rio-monad" id="the-rio-monad" class="anchor"></a>The RIO monad</h1>
+<p>In a very valuable <a href="https://www.fpcomplete.com/blog/2017/07/the-rio-monad">blog post</a>, Michael Snoyman makes the case that
+a monad that combines both I/O and reader capabilities was powerful enough to
+be <em>the</em> monad in complex I/O applications.
+He works in Haskell so some of the details are different,
+but the argument still translates well in our situation.
+Using this argument,
+We can conclude that a variant of the RIO monad is all we need in Coprocessing.
+The question is now whether to use term inference or the proper reader monad.</p>
+<p>Because I intend to inject dependencies narrowly to make the API more robust,
+term inference is the relatively better solution:
+we can inject any combination of dependencies to an action
+without needing to combine all of them in a big &quot;environment&quot; datatype.</p>
+<h1><a href="#implementation" id="implementation" class="anchor"></a>Implementation</h1>
+<p>Firstly, our I/O monad will simply be
+the function of no arguments, or the <em>thunk</em> as it is called.
+There are more advanced I/O monads out there,
+but this one has a more approachable syntax for non-FP connoisseur,
+and it can be made a lawful <code>cats.effect.SyncEffect</code> instance, forgoing only stack safety.
+I prove so at the end of this post.</p>
+<p>For injection, we abstract all Processing methods in their own injectable unit
+so we can have a fine control of when we inject them to user code.
+This also has the benefit of fully abstracting over Processing itself:
+there is no compile-time dependency from a Sketch to the Processing core library.</p>
+<p>As an example, the <a href="https://processing.org/reference/size_.html">size()</a> function,
+is materialized using the following type:</p>
+<pre><code class="scala">trait SizeOps {
+  def size(width: Int, height: Int): Unit
+  def size(width: Int, height: Int, renderer: PRenderer): Unit
+}
+
+// syntaxic sugar
+def size(width: Int, height: Int)(using SizeOps): Unit
+def size(width: Int, height: Int, renderer: PRenderer)(using SizeOps): Unit
+</code></pre>
+<p>In the back-end, when we have access to the PApplet instance,
+so instanciating <code>SizeOps</code> is straightforward.</p>
+<p>What happened to the thunk monad?
+Well, since it boils down to an extra pair of parenthesis at the end of the argument list,
+I decided to omit it,
+But we know it's secretly there.
+We do still honor the convention that side-effecting methods hold a pair of empty parentheses.</p>
+<p>We know that it's better to call size() from the <a href="https://processing.org/reference/settings_.html">settings()</a> hook on PApplet, so we only inject it there.
+Conversely, most Processing functions shouldn't be injected there, as the Processing documentation clearly states.
+The whole <a href="processing.Sketch">Sketch</a> API is built following this pattern.
+Clients can extend it to define a pure sketch that can be interpreted by any Processing backend.</p>
+<h1><a href="#attachment" id="attachment" class="anchor"></a>Attachment</h1>
+<p>This <a href="https://ammonite.io">Ammonite</a> script implements the <code>SyncEffect</code> typeclass for the thunk monad and runs the Discipline test suite on it.
+You should see that all properties pass except &quot;stack-safe on repeated attempts&quot;.</p>
+<pre><code class="scala">import $ivy.`org.typelevel::cats-effect-laws:2.1.2`
+import $ivy.`io.monix::minitest-laws:2.7.0`
+
+import scala.util.Try
+import cats.Eq
+import cats.instances.all._
+import cats.kernel.laws.IsEqArrow
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
+import cats.effect._
+import cats.effect.laws.discipline._
+import minitest.laws.Checkers
+import org.typelevel.discipline.Laws
+
+// The Coprocessing base monad
+type P[A] = () =&gt; A
+
+// shadow unwanted cats.instances
+val catsKernelOrderForFunction0 = ()
+val catsKernelPartialOrderForFunction0 = ()
+val catsKernelHashForFunction0 = ()
+val catsKernelEqForFunction0 = ()
+val catsStdBimonadForFunction0 = ()
+val function0Distributive = ()
+
+implicit val SyncEffectP = new SyncEffect[P] {
+  def pure[A](v: A) = () =&gt; v
+  def flatMap[A, B](fa: P[A])(f: A =&gt; P[B]) = suspend(f(fa()))
+  def tailRecM[A, B](a: A)(f: A =&gt; P[Either[A, B]]): P[B] = () =&gt; {
+    @annotation.tailrec
+    def rec(a: A): B = f(a)() match {
+      case Left(a) =&gt; rec(a)
+      case Right(b) =&gt; b
+    }
+    rec(a)
+  }
+
+  def handleErrorWith[A](fa: P[A])(f: Throwable =&gt; P[A]) =
+    () =&gt; Try(fa()).recover({ case e =&gt; f(e)() }).get
+  def raiseError[A](e: Throwable) = () =&gt; throw e
+
+  def bracketCase[A, B](acquire: P[A])(use: A =&gt; P[B])(release: (A, ExitCase[Throwable]) =&gt; P[Unit]) = () =&gt; {
+    val r = acquire()
+    val t = Try(use(r)())
+    release(r, t.fold(ExitCase.error, _ =&gt; ExitCase.complete))()
+    t.get
+  }
+  def suspend[A](thunk: =&gt; P[A]) = () =&gt; thunk()
+  def runSync[G[_], A](fa: P[A])(implicit G: Sync[G]): G[A] = G.delay(fa())
+}
+
+// The tests need to be able to compare P instances
+implicit val EqThrowable = Eq.allEqual[Throwable]  // all failures are equal
+implicit def EqP[A: Eq] = Eq.by[P[A], Try[A]](f =&gt; Try(f()))
+
+object PSuite extends minitest.SimpleTestSuite with Checkers {
+  def checkAll(name: String, ruleSet: Laws#RuleSet) =
+    for ((id, prop) &lt;- ruleSet.all.properties)
+      test(s&quot;$name.$id&quot;) {
+        check(prop)
+      }
+
+  checkAll(&quot;SyncEffectLaws&quot;, SyncEffectTests[P].syncEffect[Int,Int,Int])
+}
+
+{
+  implicit def ec = scala.concurrent.ExecutionContext.global
+  val p = PSuite.properties
+  p.setupSuite()
+  for {
+    prop &lt;- p
+    res &lt;- prop()
+  }
+    print(res.formatted(prop.name, true))
+  p.tearDownSuite()
+}
+</code></pre>
+
+
+    
+</main>
+</div>
+
+        <script src="/js/highlight.pack.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        
+            <script src="/js/toolbar.js"></script>
+        
+            <script src="/js/sidebar.js"></script>
+        
+        <script src="/js/dottydoc.js"></script>
+    </body>
+</html>
