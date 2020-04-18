@@ -22,9 +22,9 @@ Note that this post assumes at least a passing familiarity with the concept of m
 In Processing, we can interact with the outside world a lot.
 From a data flow perspective,
 we receive input while the program is running
--- keypresses, image data --,
+&emdash; keypresses, image data &emdash;,
 and we can output data as well
--- draw on the screen, write files --
+&emdash; draw on the screen, write files &emdash;
 at any point in the program.
 These processes are modeled with an I/O monad in which all I/O operations can be wrapped.
 This makes it possible to reason about when they are executed in relation to each other,
@@ -34,7 +34,7 @@ and much more.
 Concretely, there are multiple implementations of the I/O monad
 already existing in the Scala ecosystem.
 It is known that they are [all equally expressive][only-one-io],
--- meaning that any program that can be written in one can be converted to another--
+&emdash; meaning that any program that can be written in one can be converted to another &emdash;
 and that they only differ in terms of performance.
 
 These monads also have great support for asynchronous programming,
