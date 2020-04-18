@@ -23,6 +23,11 @@ import org.scalacheck.util.Pretty
 
 import spire.algebra._
 
+given Signed[Scalar] = {
+  import spire.std.float.{given _}
+  summon[Signed[Scalar]]
+}
+
 given Field[Scalar] = {
   import spire.std.float.{given _}
   summon[Field[Scalar]]
@@ -36,13 +41,15 @@ given (using Cogen[Array[Scalar]]) as Cogen[Matrix] = Cogen[Array[Scalar]].contr
 given (IArray[Scalar] => Pretty) =
   _.unfreeze.mkString("[",", ","]")
 
-given VectorSpace[Vector, Scalar] {
+given InnerProductSpace[Vector, Scalar] {
   val scalar = summon[Field[Scalar]]
 
   def negate(v: Vector) = mulSV(-1, v)
   val zero = Vector(0,0,0,0)
   def plus(u: Vector, v: Vector) = addVV(u,v)
   def timesl(a: Scalar, v: Vector) = mulSV(a,v)
+
+  def dot(u: Vector, v: Vector): Scalar = dotVV(u, v)
 }
 // TODO can be a Ring once invert matrix is implemented
 given Rng[Matrix] {
