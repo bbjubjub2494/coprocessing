@@ -1,6 +1,6 @@
 ---
 layout: blog-page
-title: Designing the Coprocessing Monad (draft)
+title: Designing the Coprocessing Monad
 author: Julie Bettens
 date: 2020-04-19
 ---
@@ -34,7 +34,7 @@ and much more.
 Concretely, there are multiple implementations of the I/O monad
 already existing in the Scala ecosystem.
 It is known that they are [all equally expressive][only-one-io],
-—meaning that any program that can be written in one can be converted to another —
+— meaning that any program that can be written in one can be converted to another —
 and that they only differ in terms of performance.
 
 These monads also have great support for asynchronous programming,
@@ -44,14 +44,15 @@ so we will not be able to use them.
 [only-one-io]: https://degoes.net/articles/only-one-io
 
 # Reader monads
-A reader monad can be used to implement dependency injection.
+A [reader monad] can be used to implement dependency injection.
 It can be implemented as a function of one argument and the appropriate composition operators.
 We have a need for dependency injection to pass the `PApplet` instance around in a sketch.
 
-In Scala specifically, the reader monad competes for dependency injection with [term inference][using-clauses],
+In Scala specifically, the reader monad has a competitor in the form of [term inference][using-clauses],
 and which to use depends on the situation.
 Thus, we will need to decide which one to use in Coprocessing.
 
+[reader monad]: https://github.com/lemastero/scala_typeclassopedia#reader
 [using-clauses]: https://dotty.epfl.ch/docs/reference/contextual/using-clauses.html
 
 # The RIO monad
@@ -65,7 +66,7 @@ We can conclude that a variant of the RIO monad is all we need in Coprocessing.
 The question is now whether to use term inference or the proper reader monad.
 
 Because I intend to inject dependencies narrowly to make the API more robust,
-term inference is the relatively better solution:
+term inference is the preferable solution:
 we can inject any combination of dependencies to an action
 without needing to combine all of them in a big "environment" datatype.
 
@@ -75,9 +76,9 @@ without needing to combine all of them in a big "environment" datatype.
 Firstly, our I/O monad will simply be
 the function of no arguments, or the *thunk* as it is called.
 There are more advanced I/O monads out there,
-but this one has a more approachable syntax for non-FP connoisseur,
+but this one has a more approachable syntax for the non-FP connoisseur,
 and it can be made a lawful `cats.effect.SyncEffect` instance, forgoing only stack safety.
-I prove so at the end of this post.
+I will demonstrate so at the end of this post.
 
 For injection, we abstract all Processing methods in their own injectable unit
 so we can have a fine control of when we inject them to user code.
@@ -103,10 +104,10 @@ What happened to the thunk monad?
 Well, since it boils down to an extra pair of parenthesis at the end of the argument list,
 I decided to omit it,
 But we know it's secretly there.
-We do still honor the convention that side-effecting methods hold a pair of empty parentheses.
+We do still honor the convention that side-effecting methods bear a pair of empty parentheses.
 
 We know that it's better to call size() from the [settings()][processing:settings] hook on PApplet, so we only inject it there.
-Conversely, most Processing functions shouldn't be injected there, as the Processing documentation clearly states.
+Conversely, most Processing functions shouldn't be injected in settings(), as the Processing documentation clearly states.
 The whole [Sketch](processing.Sketch) API is built following this pattern.
 Clients can extend it to define a pure sketch that can be interpreted by any Processing backend.
 
