@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-        <title>Designing the Coprocessing Monad (draft)</title>
+        <title>Designing the Coprocessing Monad</title>
 
         <link rel="icon" type="image/png" href="/images/favicon.png">
 
@@ -87,7 +87,7 @@
 <div id="content-wrapper">
     <main class="container">
     <header>
-        <h1>Designing the Coprocessing Monad (draft)</h1>
+        <h1>Designing the Coprocessing Monad</h1>
         <div class="byline">
             <time class="date">
                 <i class="far fa-calendar-alt"></i>
@@ -127,16 +127,16 @@ and much more.</p>
 <p>Concretely, there are multiple implementations of the I/O monad
 already existing in the Scala ecosystem.
 It is known that they are <a href="https://degoes.net/articles/only-one-io">all equally expressive</a>,
-—meaning that any program that can be written in one can be converted to another —
+— meaning that any program that can be written in one can be converted to another —
 and that they only differ in terms of performance.</p>
 <p>These monads also have great support for asynchronous programming,
 but for the time being, we are bound to the threading model of Processing 3
 so we will not be able to use them.</p>
 <h1><a href="#reader-monads" id="reader-monads" class="anchor"></a>Reader monads</h1>
-<p>A reader monad can be used to implement dependency injection.
+<p>A <a href="https://github.com/lemastero/scala_typeclassopedia#reader">reader monad</a> can be used to implement dependency injection.
 It can be implemented as a function of one argument and the appropriate composition operators.
 We have a need for dependency injection to pass the <code>PApplet</code> instance around in a sketch.</p>
-<p>In Scala specifically, the reader monad competes for dependency injection with <a href="https://dotty.epfl.ch/docs/reference/contextual/using-clauses.html">term inference</a>,
+<p>In Scala specifically, the reader monad has a competitor in the form of <a href="https://dotty.epfl.ch/docs/reference/contextual/using-clauses.html">term inference</a>,
 and which to use depends on the situation.
 Thus, we will need to decide which one to use in Coprocessing.</p>
 <h1><a href="#the-rio-monad" id="the-rio-monad" class="anchor"></a>The RIO monad</h1>
@@ -149,16 +149,16 @@ Using this argument,
 We can conclude that a variant of the RIO monad is all we need in Coprocessing.
 The question is now whether to use term inference or the proper reader monad.</p>
 <p>Because I intend to inject dependencies narrowly to make the API more robust,
-term inference is the relatively better solution:
+term inference is the preferable solution:
 we can inject any combination of dependencies to an action
 without needing to combine all of them in a big &quot;environment&quot; datatype.</p>
 <h1><a href="#implementation" id="implementation" class="anchor"></a>Implementation</h1>
 <p>Firstly, our I/O monad will simply be
 the function of no arguments, or the <em>thunk</em> as it is called.
 There are more advanced I/O monads out there,
-but this one has a more approachable syntax for non-FP connoisseur,
+but this one has a more approachable syntax for the non-FP connoisseur,
 and it can be made a lawful <code>cats.effect.SyncEffect</code> instance, forgoing only stack safety.
-I prove so at the end of this post.</p>
+I will demonstrate so at the end of this post.</p>
 <p>For injection, we abstract all Processing methods in their own injectable unit
 so we can have a fine control of when we inject them to user code.
 This also has the benefit of fully abstracting over Processing itself:
@@ -180,9 +180,9 @@ so instanciating <code>SizeOps</code> is straightforward.</p>
 Well, since it boils down to an extra pair of parenthesis at the end of the argument list,
 I decided to omit it,
 But we know it's secretly there.
-We do still honor the convention that side-effecting methods hold a pair of empty parentheses.</p>
+We do still honor the convention that side-effecting methods bear a pair of empty parentheses.</p>
 <p>We know that it's better to call size() from the <a href="https://processing.org/reference/settings_.html">settings()</a> hook on PApplet, so we only inject it there.
-Conversely, most Processing functions shouldn't be injected there, as the Processing documentation clearly states.
+Conversely, most Processing functions shouldn't be injected in settings(), as the Processing documentation clearly states.
 The whole <a href="processing.Sketch">Sketch</a> API is built following this pattern.
 Clients can extend it to define a pure sketch that can be interpreted by any Processing backend.</p>
 <h1><a href="#attachment" id="attachment" class="anchor"></a>Attachment</h1>
