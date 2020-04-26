@@ -19,7 +19,7 @@ package hello
 import coprocessing._
 import coprocessing.p3._
 
-class Hello(using P3LegacyOps) extends Sketch {
+class Hello(using core.legacy[PApplet]) extends Sketch {
   override def settings() =
     size(1000, 800)
   override def setup() =
