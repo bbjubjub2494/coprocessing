@@ -58,11 +58,11 @@ Thus, we will need to decide which one to use in Coprocessing.
 # The RIO monad
 In a very valuable [blog post][the-rio-monad], Michael Snoyman makes the case that
 a monad that combines both I/O and reader capabilities was powerful enough to
-be *the* monad in complex I/O applications.
+be *the* monad in complex real world applications.
 He works in Haskell so some of the details are different,
 but the argument still translates well in our situation.
 Using this argument,
-We can conclude that a variant of the RIO monad is all we need in Coprocessing.
+we can conclude that a variant of the RIO monad is all we need in Coprocessing.
 The question is now whether to use term inference or the proper reader monad.
 
 Because I intend to inject dependencies narrowly to make the API more robust,
@@ -108,7 +108,7 @@ We do still honor the convention that side-effecting methods bear a pair of empt
 
 We know that it's better to call size() from the [settings()][processing:settings] hook on PApplet, so we only inject it there.
 Conversely, most Processing functions shouldn't be injected in settings(), as the Processing documentation clearly states.
-The whole [Sketch](processing.Sketch) API is built following this pattern.
+The whole [Sketch](coprocessing.Sketch) API is built following this pattern.
 Clients can extend it to define a pure sketch that can be interpreted by any Processing backend.
 
 [processing:size]: https://processing.org/reference/size_.html
