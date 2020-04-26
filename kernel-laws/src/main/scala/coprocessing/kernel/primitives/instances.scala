@@ -51,10 +51,14 @@ given InnerProductSpace[Vector, Scalar] {
 
   def dot(u: Vector, v: Vector): Scalar = dotVV(u, v)
 }
-// TODO can be a Ring once invert matrix is implemented
-given Rng[Matrix] {
+
+given Ring[Matrix] with MultiplicativeGroup[Matrix] {
   def negate(m: Matrix) = mulSM(-1, m)
   val zero = Matrix(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
   def plus(m1: Matrix, m2: Matrix) = addMM(m1, m2)
+
+  def one = IdentityMatrix
   def times(m1: Matrix, m2: Matrix) = mulMM(m1, m2)
+  override def isZero(m: Matrix)(using Eq[Matrix]) = determinantM(m) == 0
+  def div(m1: Matrix, m2: Matrix)= mulMM(m1, invertM(m2).get)
 }
