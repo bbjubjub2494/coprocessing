@@ -17,28 +17,30 @@
 package coprocessing.core
 
 trait Sketch {
-  def settings(): (SizeOps) ?=> Unit = ()
-  def setup(): (FrameRateOps) ?=> Unit = ()
-  def draw(): (FrameRateOps) ?=> Unit = ()
+  def settings(): (size) ?=> Unit = ()
+  def setup(): (frameRate) ?=> Unit = ()
+  def draw(): (frameRate) ?=> Unit = ()
 }
 
-trait SizeOps {
+trait size {
     def size(width: Int, height: Int): Unit
 }
-inline def size(width: Int, height: Int)(using SizeOps) =
-  summon[SizeOps].size(width, height)
+inline def size(width: Int, height: Int)(using size) =
+  summon[size].size(width, height)
 
-trait FrameRateOps {
+trait frameRate {
     def frameRate: Float
     def frameRate(fps: Float): Unit
 }
-inline def frameRate(using FrameRateOps) =
-  summon[FrameRateOps].frameRate
-inline def frameRate(fps: Float)(using FrameRateOps) =
-  summon[FrameRateOps].frameRate(fps)
+inline def frameRate(using frameRate) =
+  summon[frameRate].frameRate
+inline def frameRate(fps: Float)(using frameRate) =
+  summon[frameRate].frameRate(fps)
 
-trait LegacyOps[C] {
+trait legacy[C] {
     def legacy[A](f: C ?=> A): A
 }
-inline def legacy[C, A](f: C ?=> A)(using LegacyOps[C]): A =
-  summon[LegacyOps[C]].legacy(f)
+inline def legacy[C, A](f: C ?=> A)(using legacy[C]): A =
+  summon[legacy[C]].legacy(f)
+
+trait BackendAPI[C] extends size with frameRate with legacy[C]
