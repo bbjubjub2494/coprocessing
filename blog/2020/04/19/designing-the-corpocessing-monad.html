@@ -142,11 +142,11 @@ Thus, we will need to decide which one to use in Coprocessing.</p>
 <h1><a href="#the-rio-monad" id="the-rio-monad" class="anchor"></a>The RIO monad</h1>
 <p>In a very valuable <a href="https://www.fpcomplete.com/blog/2017/07/the-rio-monad">blog post</a>, Michael Snoyman makes the case that
 a monad that combines both I/O and reader capabilities was powerful enough to
-be <em>the</em> monad in complex I/O applications.
+be <em>the</em> monad in complex real world applications.
 He works in Haskell so some of the details are different,
 but the argument still translates well in our situation.
 Using this argument,
-We can conclude that a variant of the RIO monad is all we need in Coprocessing.
+we can conclude that a variant of the RIO monad is all we need in Coprocessing.
 The question is now whether to use term inference or the proper reader monad.</p>
 <p>Because I intend to inject dependencies narrowly to make the API more robust,
 term inference is the preferable solution:
@@ -183,7 +183,7 @@ But we know it's secretly there.
 We do still honor the convention that side-effecting methods bear a pair of empty parentheses.</p>
 <p>We know that it's better to call size() from the <a href="https://processing.org/reference/settings_.html">settings()</a> hook on PApplet, so we only inject it there.
 Conversely, most Processing functions shouldn't be injected in settings(), as the Processing documentation clearly states.
-The whole <a href="processing.Sketch">Sketch</a> API is built following this pattern.
+The whole <a href="/api/coprocessing/exports$package$.html#Sketch">Sketch</a> API is built following this pattern.
 Clients can extend it to define a pure sketch that can be interpreted by any Processing backend.</p>
 <h1><a href="#attachment" id="attachment" class="anchor"></a>Attachment</h1>
 <p>This <a href="https://ammonite.io">Ammonite</a> script implements the <code>SyncEffect</code> typeclass for the thunk monad and runs the Discipline test suite on it.
