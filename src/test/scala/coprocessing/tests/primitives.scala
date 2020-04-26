@@ -22,6 +22,8 @@ import cats.Eq
 import cats.kernel.laws.IsEqArrow
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 import cats.kernel.laws.discipline.EqTests
+import cats.laws.discipline.arbitrary.{given _}
+import cats.data.NonEmptyList
 import org.scalacheck._
 
 object PrimitivesSuite extends BaseSuite {
@@ -48,6 +50,11 @@ object PrimitivesSuite extends BaseSuite {
 
   test("properties of scalar matrices") {
     check2((s: Scalar, v: Vector) => mulMV(scalarMatrix(s), v) <-> mulSV(s,v))
+  }
+
+  test("properties of foldMulMs") {
+    given Eq[Scalar] = relaxedScalarEq
+    check1((ms: NonEmptyList[Matrix]) => foldMulMs(ms.toList.reverseIterator) <-> ms.reduceLeft(mulMM))
   }
 
   {
