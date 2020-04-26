@@ -23,6 +23,7 @@
 package coprocessing.kernel.primitives
 
 import unsafe.freeze
+import coprocessing.kernel.Opt
 
 import cats.kernel.Eq
 
@@ -160,3 +161,35 @@ def addVV(v1: Vector, v2: Vector): Vector =
 
 def addMM(v1: Matrix, v2: Matrix): Matrix =
   addAA(v1, v2)
+
+def determinantM(m: Matrix): Scalar =
+  m(0) * det3(m, 0)
+  - m(1) * det3(m, 1)
+  + m(2) * det3(m, 2)
+  - m(3) * det3(m, 3)
+
+def det3(m: Matrix, i: Int): Scalar =
+  val j = i >> 2
+  inline def get(i: Int, j: Int) =
+    m(i % 4 | (j % 4) << 2)
+  // Sarrus's rule
+  (
+    + get(i + 1, j + 1) * get(i + 2, j + 2) * get(i + 3, j + 3)
+    + get(i + 1, j + 2) * get(i + 2, j + 3) * get(i + 3, j + 5)
+    + get(i + 1, j + 3) * get(i + 2, j + 5) * get(i + 3, j + 6)
+    - get(i + 1, j + 3) * get(i + 2, j + 2) * get(i + 3, j + 1)
+    - get(i + 1, j + 5) * get(i + 2, j + 3) * get(i + 3, j + 2)
+    - get(i + 1, j + 6) * get(i + 2, j + 5) * get(i + 3, j + 3)
+  )
+
+def invertM(m: Matrix): Opt[Matrix] =
+  val d = determinantM(m)
+  if d == 0 then
+    Opt.empty
+  else
+    Opt(Matrix(
+      +det3(m, 0)/d, -det3(m, 4)/d, +det3(m,  8)/d, -det3(m, 12)/d,
+      -det3(m, 1)/d, +det3(m, 5)/d, -det3(m,  9)/d, +det3(m, 13)/d,
+      +det3(m, 2)/d, -det3(m, 6)/d, +det3(m, 10)/d, -det3(m, 14)/d,
+      -det3(m, 3)/d, +det3(m, 7)/d, -det3(m, 11)/d, +det3(m, 15)/d,
+    ))
