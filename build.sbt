@@ -25,7 +25,7 @@ val libraries = new {
 lazy val sharedSettings = Seq(
   turbo := true,
   useSuperShell := false,
-  scalaVersion := "0.23.0-RC1",
+  scalaVersion := "0.23.0",
   scalacOptions ++= Seq(
     "-Yexplicit-nulls",
     "-deprecation",
