@@ -42,9 +42,9 @@ import cats.kernel.Eq
 * Borrowed from [Spire](https://typelevel.org/spire/)
 */
 object Opt {
-  def apply[A](a: A): Opt[A] = new Opt(a)
+  def apply[A: NonNullable](a: A): Opt[A] = new Opt(a)
 
-  def empty[A]: Opt[A] = new Opt[A](null)
+  def empty[A: NonNullable]: Opt[A] = new Opt[A](null)
 
   // this is a name-based extractor. instead of returning Option[_] it
   // is free to return any type with .isEmpty and .get, i.e. Opt[_].
@@ -63,7 +63,7 @@ object Opt {
   given [A, B](using A Eql B) as (Opt[A] Eql Opt[B]) = Eql.derived
 }
 
-class Opt[+A](val ref: A | Null) extends AnyVal {
+class Opt[+A] private(val ref: A | Null) extends AnyVal {
 
   def isDefined: Boolean = ref != null
   def nonEmpty: Boolean = ref != null
@@ -75,7 +75,7 @@ class Opt[+A](val ref: A | Null) extends AnyVal {
     if (ref == null) "Opt.empty" else s"Opt($ref)"
 
   def filter(f: A => Boolean): Opt[A] =
-    if (ref != null && f(ref)) this else Opt.empty
+    if (ref != null && f(ref)) this else new Opt(null)
 
   def map[B](f: A => B): Opt[B] =
     if (ref == null) Opt.empty else Opt(f(ref))
