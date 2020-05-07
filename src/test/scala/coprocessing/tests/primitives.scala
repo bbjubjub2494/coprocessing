@@ -16,7 +16,7 @@
  */
 package coprocessing.tests
 
-import coprocessing.kernel.primitives.{_, given _}
+import coprocessing.primitives.{_, given _}
 import spire.laws.{_, given _}
 import cats.Eq
 import cats.kernel.laws.IsEqArrow

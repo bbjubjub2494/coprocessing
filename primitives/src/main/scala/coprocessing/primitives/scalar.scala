@@ -14,20 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Coprocessing.  If not, see <https://www.gnu.org/licenses/>.
  */
-package coprocessing.kernel.primitives
+package coprocessing.primitives
 
 import unsafe._
-
-import cats.kernel.Eq
 
 
 /** Type of scalar values */
 type Scalar = Float
-
-given Eq[Scalar] = {
-  import cats.kernel.instances.float._
-  summon[Eq[Scalar]]
-}
 
 def cloneA(a: IArray[Scalar]): Array[Scalar] =
   Array.copyOf(a.unfreeze, a.length)
