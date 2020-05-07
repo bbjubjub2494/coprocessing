@@ -16,7 +16,7 @@
  */
 package coprocessing.core
 
-import coprocessing.kernel.primitives.{_, given _}
+import coprocessing.primitives.{_, given _}
 
 import cats.Show
 

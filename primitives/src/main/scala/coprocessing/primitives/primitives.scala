@@ -20,11 +20,9 @@
 * Opaque types are used to indicate matrix shape.
 * Hungarian notation is needed because of type erasure.
 */
-package coprocessing.kernel.primitives
+package coprocessing.primitives
 
 import unsafe.freeze
-
-import cats.kernel.Eq
 
 private def dot4(v1: IArray[Scalar], off1: Int)(v2: IArray[Scalar], off2: Int): Scalar =
   v1(off1  ) * v2(off2  ) +
@@ -41,33 +39,6 @@ opaque type VectorArray <: IArray[Scalar] = IArray[Scalar]
 /** mutable column-major 4xN */
 opaque type MVectorArray <: Array[Scalar] = Array[Scalar]
 
-given (using Eq[Scalar]) as Eq[Vector] = Eq.instance {
-    (v1, v2) =>
-      Eq.eqv(v1(0), v2(0)) &
-      Eq.eqv(v1(1), v2(1)) &
-      Eq.eqv(v1(2), v2(2)) &
-      Eq.eqv(v1(3), v2(3))
-}
-
-given (using Eq[Scalar]) as Eq[Matrix] = Eq.instance {
-    (m1, m2) =>
-      Eq.eqv(m1( 0), m2( 0)) &
-      Eq.eqv(m1( 1), m2( 1)) &
-      Eq.eqv(m1( 2), m2( 2)) &
-      Eq.eqv(m1( 3), m2( 3)) &&
-      Eq.eqv(m1( 4), m2( 4)) &
-      Eq.eqv(m1( 5), m2( 5)) &
-      Eq.eqv(m1( 6), m2( 6)) &
-      Eq.eqv(m1( 7), m2( 7)) &&
-      Eq.eqv(m1( 8), m2( 8)) &
-      Eq.eqv(m1( 9), m2( 9)) &
-      Eq.eqv(m1(10), m2(10)) &
-      Eq.eqv(m1(11), m2(11)) &&
-      Eq.eqv(m1(12), m2(12)) &
-      Eq.eqv(m1(13), m2(13)) &
-      Eq.eqv(m1(14), m2(14)) &
-      Eq.eqv(m1(15), m2(15))
-}
 
 /** Build a [Matrix](Matrix) from its scalar components. */
 def Matrix(n00: Scalar, n01: Scalar, n02: Scalar, n03: Scalar,

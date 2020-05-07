@@ -18,22 +18,18 @@ lazy val sharedSettings = Seq(
   ),
 )
 
-lazy val kernel = project
+lazy val primitives = project
   .settings(sharedSettings)
   .settings(
-    moduleName := "coprocessing-kernel",
-    libraryDependencies ++= Seq(
-      `cats-kernel`.withDottyCompat(dottyVersion),
-    ),
+    moduleName := "coprocessing-primitives",
   )
 
-lazy val `kernel-laws` = project
+lazy val `primitives-laws` = project
   .settings(sharedSettings)
-  .dependsOn(kernel)
+  .dependsOn(primitives)
   .settings(
-    moduleName := "coprocessing-kernel-laws",
+    moduleName := "coprocessing-primitives-laws",
     libraryDependencies ++= Seq(
-      `scalacheck`.withDottyCompat(dottyVersion),
       `spire`.withDottyCompat(dottyVersion),
       `algebra-laws`.withDottyCompat(dottyVersion),
     ),
@@ -41,7 +37,7 @@ lazy val `kernel-laws` = project
 
 lazy val core = project
   .settings(sharedSettings)
-  .dependsOn(kernel)
+  .dependsOn(primitives)
   .settings(
     moduleName := "coprocessing-core",
     libraryDependencies ++= Seq(
@@ -62,7 +58,7 @@ lazy val p3backend = project
 lazy val root = (project in file("."))
   .settings(sharedSettings)
   .dependsOn(core)
-  .dependsOn(`kernel-laws` % Test)
+  .dependsOn(`primitives-laws` % Test)
   .settings(
     name := "Coprocessing",
     moduleName := "coprocessing",
