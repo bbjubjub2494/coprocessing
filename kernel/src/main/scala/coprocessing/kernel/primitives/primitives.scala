@@ -23,7 +23,6 @@
 package coprocessing.kernel.primitives
 
 import unsafe.freeze
-import coprocessing.kernel.Opt
 
 import cats.kernel.Eq
 
@@ -182,14 +181,14 @@ def det3(m: Matrix, i: Int): Scalar =
     - get(i + 1, j + 6) * get(i + 2, j + 5) * get(i + 3, j + 3)
   )
 
-def invertM(m: Matrix): Opt[Matrix] =
+def invertM(m: Matrix): Matrix | Null =
   val d = determinantM(m)
   if d == 0 then
-    Opt.empty
+    null
   else
-    Opt(Matrix(
+    Matrix(
       +det3(m, 0)/d, -det3(m, 4)/d, +det3(m,  8)/d, -det3(m, 12)/d,
       -det3(m, 1)/d, +det3(m, 5)/d, -det3(m,  9)/d, +det3(m, 13)/d,
       +det3(m, 2)/d, -det3(m, 6)/d, +det3(m, 10)/d, -det3(m, 14)/d,
       -det3(m, 3)/d, +det3(m, 7)/d, -det3(m, 11)/d, +det3(m, 15)/d,
-    ))
+    )

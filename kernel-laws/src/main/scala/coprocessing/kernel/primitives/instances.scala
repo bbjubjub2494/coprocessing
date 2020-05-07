@@ -60,5 +60,5 @@ given Ring[Matrix] with MultiplicativeGroup[Matrix] {
   def one = IdentityMatrix
   def times(m1: Matrix, m2: Matrix) = mulMM(m1, m2)
   override def isZero(m: Matrix)(using Eq[Matrix]) = determinantM(m) == 0
-  def div(m1: Matrix, m2: Matrix)= mulMM(m1, invertM(m2).get)
+  def div(m1: Matrix, m2: Matrix)= mulMM(m1, invertM(m2).nn)
 }
