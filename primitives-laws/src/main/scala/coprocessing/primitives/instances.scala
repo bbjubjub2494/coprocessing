@@ -14,32 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Coprocessing.  If not, see <https://www.gnu.org/licenses/>.
  */
-package coprocessing.kernel.primitives
+package coprocessing.primitives
 
-import unsafe._
-
+import opaques.arrayOps
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import org.scalacheck.util.Pretty
 
 import spire.algebra._
 
-given Signed[Scalar] = {
+given Signed[Scalar] =
   import spire.std.float.{given _}
   summon[Signed[Scalar]]
-}
 
-given Field[Scalar] = {
+given Field[Scalar] =
   import spire.std.float.{given _}
   summon[Field[Scalar]]
-}
+
+given (using Eq[Scalar]) as Eq[Vector] = _ zip _ forall Eq.eqv
+given (using Eq[Scalar]) as Eq[Matrix] = _ zip _ forall Eq.eqv
 
 given (using Arbitrary[Scalar]) as Arbitrary[Vector] = Arbitrary(Gen.resultOf(Vector))
 given (using Arbitrary[Scalar]) as Arbitrary[Matrix] = Arbitrary(Gen.resultOf(Matrix))
-given (using Cogen[Array[Scalar]]) as Cogen[Vector] = Cogen[Array[Scalar]].contramap(_.unfreeze)
-given (using Cogen[Array[Scalar]]) as Cogen[Matrix] = Cogen[Array[Scalar]].contramap(_.unfreeze)
+given (using Cogen[Array[Scalar]]) as Cogen[Vector] = Cogen[Array[Scalar]].contramap(unsafe.unfreeze)
+given (using Cogen[Array[Scalar]]) as Cogen[Matrix] = Cogen[Array[Scalar]].contramap(unsafe.unfreeze)
 
 given (IArray[Scalar] => Pretty) =
-  _.unfreeze.mkString("[",", ","]")
+  unsafe.unfreeze(_).mkString("[",", ","]")
 
 given InnerProductSpace[Vector, Scalar] {
   val scalar = summon[Field[Scalar]]
@@ -60,5 +60,5 @@ given Ring[Matrix] with MultiplicativeGroup[Matrix] {
   def one = IdentityMatrix
   def times(m1: Matrix, m2: Matrix) = mulMM(m1, m2)
   override def isZero(m: Matrix)(using Eq[Matrix]) = determinantM(m) == 0
-  def div(m1: Matrix, m2: Matrix)= mulMM(m1, invertM(m2).get)
+  def div(m1: Matrix, m2: Matrix)= mulMM(m1, invertM(m2).nn)
 }

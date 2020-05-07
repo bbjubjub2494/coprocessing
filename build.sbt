@@ -3,78 +3,72 @@ licenses := Seq(
   "LGPL-3.0" -> url("https://opensource.org/licenses/LGPL-3.0"),
 )
 
-val catsVersion = "2.1.1"
-val minitestVersion = "2.7.0"
-val processingVersion = "3.3.7"
-val scalacheckVersion = "1.14.3"
-val spireVersion = "0.17.0-M1"
-val algebraVersion = "2.0.1"
+import Libraries._
 
-val libraries = new {
-  val `algebra-laws` = "org.typelevel" %% "algebra-laws" % algebraVersion
-  val `cats-core` = "org.typelevel" %% "cats-core" % catsVersion
-  val `cats-kernel` = "org.typelevel" %% "cats-kernel" % catsVersion
-  val `cats-laws` = "org.typelevel" %% "cats-laws" % catsVersion
-  val `minitest-laws` = "io.monix" %% "minitest-laws" % minitestVersion
-  val `processing-core` = "org.processing" % "core" % processingVersion
-  val scalacheck = "org.scalacheck" %% "scalacheck" % scalacheckVersion
-  val spire = "org.typelevel" %% "spire" % spireVersion
-  val `spire-laws` = "org.typelevel" %% "spire-laws" % spireVersion
-}
+val dottyVersion = "0.23.0"
 
 lazy val sharedSettings = Seq(
   turbo := true,
   useSuperShell := false,
-  scalaVersion := "0.23.0",
+  scalaVersion := dottyVersion,
   scalacOptions ++= Seq(
     "-Yexplicit-nulls",
     "-deprecation",
     "-encoding", "UTF-8",
-    "-feature",
-    "-unchecked"
   ),
 )
 
-lazy val kernel = project
+lazy val primitives = project
   .settings(sharedSettings)
   .settings(
-    libraryDependencies += libraries.`cats-kernel`.withDottyCompat(scalaVersion.value),
+    moduleName := "coprocessing-primitives",
   )
 
-lazy val `kernel-laws` = project
+lazy val `primitives-laws` = project
   .settings(sharedSettings)
-  .dependsOn(kernel)
+  .dependsOn(primitives)
   .settings(
-    libraryDependencies += libraries.scalacheck.withDottyCompat(scalaVersion.value),
-    libraryDependencies += libraries.spire.withDottyCompat(scalaVersion.value),
-    libraryDependencies += libraries.`algebra-laws`.withDottyCompat(scalaVersion.value),
+    moduleName := "coprocessing-primitives-laws",
+    libraryDependencies ++= Seq(
+      `spire`.withDottyCompat(dottyVersion),
+      `algebra-laws`.withDottyCompat(dottyVersion),
+    ),
   )
 
 lazy val core = project
   .settings(sharedSettings)
-  .dependsOn(kernel)
+  .dependsOn(primitives)
   .settings(
-    libraryDependencies += libraries.`cats-core`.withDottyCompat(scalaVersion.value),
+    moduleName := "coprocessing-core",
+    libraryDependencies ++= Seq(
+      `cats-core`.withDottyCompat(dottyVersion),
+    ),
   )
 
 lazy val p3backend = project
   .settings(sharedSettings)
   .dependsOn(core)
   .settings(
-    libraryDependencies += libraries.`processing-core`,
+    moduleName := "coprocessing-p3backend",
+    libraryDependencies ++= Seq(
+      `processing-core`,
+    ),
   )
 
 lazy val root = (project in file("."))
   .settings(sharedSettings)
   .dependsOn(core)
-  .dependsOn(`kernel-laws` % Test)
+  .dependsOn(`primitives-laws` % Test)
   .settings(
+    name := "Coprocessing",
     moduleName := "coprocessing",
-    libraryDependencies += (libraries.`cats-core` % Test).withDottyCompat(scalaVersion.value),
-    libraryDependencies += (libraries.`cats-laws` % Test).withDottyCompat(scalaVersion.value),
-    libraryDependencies += (libraries.`minitest-laws` % Test).withDottyCompat(scalaVersion.value),
-    libraryDependencies += (libraries.`spire-laws` % Test).withDottyCompat(scalaVersion.value),
-    testFrameworks += new TestFramework("minitest.runner.Framework")
+    libraryDependencies ++= Seq(
+      (`cats-core` % Test).withDottyCompat(dottyVersion),
+      (`cats-laws` % Test).withDottyCompat(dottyVersion),
+      (`minitest-laws` % Test).withDottyCompat(dottyVersion),
+      (`spire-laws` % Test).withDottyCompat(dottyVersion),
+    ),
+    testFrameworks += new TestFramework("minitest.runner.Framework"),
   )
 
 lazy val demo = project

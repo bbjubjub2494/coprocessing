@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Coprocessing.  If not, see <https://www.gnu.org/licenses/>.
  */
-package coprocessing.kernel.primitives
+package coprocessing.primitives
 
 /** Unsafe casts that are sometimes needed internally
  */
