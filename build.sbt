@@ -69,7 +69,9 @@ lazy val root = (project in file("."))
       (`discipline-munit` % Test).withDottyCompat(dottyVersion),
       (`spire-laws` % Test).withDottyCompat(dottyVersion),
     ),
-    testFrameworks += new TestFramework("munit.Framework"),
+    testFrameworks := Seq(
+      new TestFramework("munit.Framework"),
+    ),
   )
 
 lazy val demo = project
