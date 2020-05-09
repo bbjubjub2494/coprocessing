@@ -16,29 +16,7 @@
  */
 package coprocessing.tests
 
-import minitest.SimpleTestSuite
-import minitest.api._
-import minitest.laws.Checkers
-import org.scalacheck.Test.Parameters
-import org.typelevel.discipline.Laws
+import munit.{DisciplineSuite, Location}
 
-trait BaseSuite extends SimpleTestSuite with Checkers {
-  export Void.toVoid, SourceLocation.fromContext
-
-  override lazy val checkConfig: Parameters =
-    Parameters.default
-      .withMinSuccessfulTests(100)
-      .withMaxDiscardRatio(5)
-
-  lazy val slowCheckConfig: Parameters =
-    Parameters.default
-      .withMinSuccessfulTests(10)
-      .withMaxDiscardRatio(50)
-      .withMaxSize(6)
-
-  def checkAll(name: String, ruleSet: Laws#RuleSet): Unit =
-    for (id, prop) <- ruleSet.all.properties do
-      test(s"$name.$id") {
-        check(prop)
-      }
-}
+trait BaseSuite extends DisciplineSuite:
+  given Location = Location.empty

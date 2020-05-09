@@ -65,10 +65,11 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       (`cats-core` % Test).withDottyCompat(dottyVersion),
       (`cats-laws` % Test).withDottyCompat(dottyVersion),
-      (`minitest-laws` % Test).withDottyCompat(dottyVersion),
+      (`munit` % Test).withDottyCompat(dottyVersion),
+      (`discipline-munit` % Test).withDottyCompat(dottyVersion),
       (`spire-laws` % Test).withDottyCompat(dottyVersion),
     ),
-    testFrameworks += new TestFramework("minitest.runner.Framework"),
+    testFrameworks += new TestFramework("munit.Framework"),
   )
 
 lazy val demo = project
