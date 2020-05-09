@@ -133,7 +133,7 @@ def addMM(v1: Matrix, v2: Matrix): Matrix =
   addAA(v1, v2)
 
 def determinantM(m: Matrix): Scalar =
-  m(0) * det3(m, 0)
+  + m(0) * det3(m, 0)
   - m(1) * det3(m, 1)
   + m(2) * det3(m, 2)
   - m(3) * det3(m, 3)
