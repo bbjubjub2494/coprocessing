@@ -16,20 +16,7 @@
  */
 package coprocessing.tests
 
-import util._
+import munit.{DisciplineSuite, Location}
 
-import minitest.laws.Checkers
-import org.scalacheck.Test.Parameters
-
-trait BaseSuite extends MinimalTestSuite with Discipline with Checkers {
-  override lazy val checkConfig: Parameters =
-    Parameters.default
-      .withMinSuccessfulTests(100)
-      .withMaxDiscardRatio(5)
-
-  lazy val slowCheckConfig: Parameters =
-    Parameters.default
-      .withMinSuccessfulTests(10)
-      .withMaxDiscardRatio(50)
-      .withMaxSize(6)
-}
+trait BaseSuite extends DisciplineSuite:
+  given Location = Location.empty

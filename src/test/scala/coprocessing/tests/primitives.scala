@@ -26,7 +26,7 @@ import cats.laws.discipline.arbitrary.{given _}
 import cats.data.NonEmptyChain
 import org.scalacheck._
 
-object PrimitivesSuite extends BaseSuite {
+class PrimitivesSuite extends BaseSuite {
   // More lenient Eq[Scalar] required for some properties to pass.
   // - Infinities and NaNs are equal to everything else
   // - approximately equal values are equal
@@ -48,14 +48,16 @@ object PrimitivesSuite extends BaseSuite {
   checkAll("Eq[Vector]", EqTests[Vector].eqv)
   checkAll("Eq[Matrix]", EqTests[Matrix].eqv)
 
-  test("properties of scalar matrices") {
-    check2((s: Scalar, v: Vector) => mulMV(scalarMatrix(s), v) <-> mulSV(s,v))
+  property("properties of scalar matrices") {
+    Prop.forAll((s: Scalar, v: Vector) => mulMV(scalarMatrix(s), v) <-> mulSV(s,v))
   }
 
-  test("properties of foldMulMs") {
+  property("foldMulMs on empty") {
+    foldMulMs(Iterator.empty) <-> IdentityMatrix
+  }
+  property("foldMulMs on non-empty") {
     given Eq[Scalar] = relaxedScalarEq
-    check(foldMulMs(Iterator.empty) <-> IdentityMatrix)
-    check1((ms: NonEmptyChain[Matrix]) => foldMulMs(ms.reverseIterator) <-> ms.reduceLeft(mulMM))
+    Prop.forAll((ms: NonEmptyChain[Matrix]) => foldMulMs(ms.reverseIterator) <-> ms.reduceLeft(mulMM))
   }
 
   {
