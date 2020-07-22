@@ -16,9 +16,9 @@
  */
 package coprocessing.core
 
-import coprocessing.primitives.{_, given _}
+import coprocessing.primitives._
 
-import cats.Show
+import cats.data.Chain, cats.Show, cats.syntax.foldable.{given _}
 
 opaque type Vector3D = Vector
 object Vector3D {
@@ -59,7 +59,7 @@ object Matrix3D {
            (n20: Scalar, n21: Scalar, n22: Scalar, n23: Scalar)
            (n30: Scalar, n31: Scalar, n32: Scalar, n33: Scalar): Matrix3D =
     Matrix(n00, n01, n02, n03,n10, n11, n12, n13,n20, n21, n22, n23,n30, n31, n32, n33)
-  val Identity: Matrix3D = IdentityMatrix
+  def identity: Matrix3D = IdentityMatrix
 }
 
 extension Matrix3DOps on (self: Matrix3D) {
@@ -68,6 +68,9 @@ extension Matrix3DOps on (self: Matrix3D) {
   def apply(v: Vector3D): Vector3D = mulMV(self, v)
   def compose(other: Matrix3D): Matrix3D = mulMM(self, other)
   def andThen(other: Matrix3D): Matrix3D = other compose self
+
+  def andThen(t: Transformation): Transformation = t compose self
+  def compose(t: Transformation): Transformation = t andThen self
 
   def  _1: Scalar = toArray( 0)
   def  _2: Scalar = toArray( 1)
@@ -108,3 +111,28 @@ given Show[Vector3D] {
   def show(self: Vector3D) =
     String.format(Format, self._1, self._2, self._3, self._4).nn
 }
+
+opaque type Transformation = Chain[Matrix3D]
+
+/** Lazy composition of matrices in `andThen` order.
+ */
+object Transformation:
+  def fromSeq(ms: Seq[Matrix3D]): Transformation =
+    Chain.fromSeq(ms)
+  def apply(ms: Matrix3D*) = fromSeq(ms)
+  def identity: Transformation = Chain.nil
+  given (using Show[Matrix3D]) as Show[Transformation]:
+    def show(self: Transformation) =
+      self.mkString_("Transformation(", ", ", ")")
+
+extension TransformationOps on (self: Transformation):
+  def apply(v: Vector3D): Vector3D =
+    self.foldLeft(v)((v, m) => mulMV(m, v))  // TODO: optimize
+
+  def andThen(other: Transformation): Transformation = self ++ other
+  def compose(other: Transformation): Transformation = other ++ self
+
+  def andThen(m: Matrix3D): Transformation = self :+ m
+  def compose(m: Matrix3D): Transformation = m +: self
+
+  def toMatrix: Matrix3D = foldMulMs(self.iterator)
