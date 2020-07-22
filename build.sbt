@@ -5,7 +5,7 @@ licenses := Seq(
 
 import Libraries._
 
-val dottyVersion = "0.24.0"
+val dottyVersion = "0.25.0"
 
 lazy val sharedSettings = Seq(
   turbo := true,
