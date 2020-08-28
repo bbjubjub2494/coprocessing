@@ -102,7 +102,7 @@ def mulSM(s: Scalar, m: Matrix): Matrix =
 def mulMV(m: Matrix, v: Vector): Vector =
   val r = cloneV(v)
   r.batchTransformInplace(m)
-  freeze(r)
+  r.freeze
 
 def mulMM(m1: Matrix, m2: Matrix): Matrix =
   val r = cloneCols(m2)

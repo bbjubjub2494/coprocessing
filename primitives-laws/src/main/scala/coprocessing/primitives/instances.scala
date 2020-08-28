@@ -16,7 +16,7 @@
  */
 package coprocessing.primitives
 
-import opaques.arrayOps
+import opaques.arrayOps, unsafe._
 import org.scalacheck.{Arbitrary, Cogen, Gen}
 import org.scalacheck.util.Pretty
 
@@ -35,11 +35,11 @@ given (using Eq[Scalar]) as Eq[Matrix] = _ zip _ forall Eq.eqv
 
 given (using Arbitrary[Scalar]) as Arbitrary[Vector] = Arbitrary(Gen.resultOf(Vector))
 given (using Arbitrary[Scalar]) as Arbitrary[Matrix] = Arbitrary(Gen.resultOf(Matrix))
-given (using Cogen[Array[Scalar]]) as Cogen[Vector] = Cogen[Array[Scalar]].contramap(unsafe.unfreeze)
-given (using Cogen[Array[Scalar]]) as Cogen[Matrix] = Cogen[Array[Scalar]].contramap(unsafe.unfreeze)
+given (using Cogen[Array[Scalar]]) as Cogen[Vector] = Cogen[Array[Scalar]].contramap(_.unfreeze)
+given (using Cogen[Array[Scalar]]) as Cogen[Matrix] = Cogen[Array[Scalar]].contramap(_.unfreeze)
 
 given (IArray[Scalar] => Pretty) =
-  unsafe.unfreeze(_).mkString("[",", ","]")
+  _.unfreeze.mkString("[",", ","]")
 
 given InnerProductSpace[Vector, Scalar] {
   val scalar = summon[Field[Scalar]]

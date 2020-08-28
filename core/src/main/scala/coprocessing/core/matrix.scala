@@ -42,10 +42,10 @@ extension Vector3DOps on (self: Vector3D) {
   def _3: Scalar = toArray(2)
   def _4: Scalar = toArray(3)
 
-  def x = _1
-  def y = _2
-  def z = _3
-  def w = _4
+  def x: Scalar = _1
+  def y: Scalar = _2
+  def z: Scalar = _3
+  def w: Scalar = _4
 
   def apply(i: Int): Scalar =
     require(i >= 0 && i < 4)
