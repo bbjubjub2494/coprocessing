@@ -1,2 +1,4 @@
 target/
 .dotty-ide*
+.direnv
+result

@@ -1,0 +1,57 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1606310017,
+        "narHash": "sha256-agRPYxf0FbZrZH4IdBLS5BIwD7tTSCYs1fsDSEp8OEI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "be9410564a6fe0a0cb22aefe7f6fa1898f53cd24",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "sbt-derivation": "sbt-derivation",
+        "utils": "utils"
+      }
+    },
+    "sbt-derivation": {
+      "locked": {
+        "lastModified": 1602145051,
+        "narHash": "sha256-P71MgJhJoTYba/5fI5xYeKuh/dpQuqlXp3REArciJ58=",
+        "owner": "zaninime",
+        "repo": "sbt-derivation",
+        "rev": "9666b2b589ed68823fff1cefa4cd8a8ab54956c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zaninime",
+        "repo": "sbt-derivation",
+        "type": "github"
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1605370193,
+        "narHash": "sha256-YyMTf3URDL/otKdKgtoMChu4vfVL3vCMkRqpGifhUn0=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5021eac20303a61fafe17224c087f5519baed54d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
